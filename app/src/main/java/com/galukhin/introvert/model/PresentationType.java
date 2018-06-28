@@ -5,6 +5,6 @@ package com.galukhin.introvert.model;
  * value.
  */
 
-enum Type {
+public enum PresentationType {
     TEXT, AUDIO, VIDEO, IMAGE, HTML
 }
