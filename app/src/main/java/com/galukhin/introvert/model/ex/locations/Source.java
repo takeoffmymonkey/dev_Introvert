@@ -1,6 +1,6 @@
-package com.galukhin.introvert.model.locations;
+package com.galukhin.introvert.model.ex.locations;
 
-import com.galukhin.introvert.model.data.Data;
+import com.galukhin.introvert.model.ex.data.Data;
 
 /**
  * Represents a source of data, where to read it from

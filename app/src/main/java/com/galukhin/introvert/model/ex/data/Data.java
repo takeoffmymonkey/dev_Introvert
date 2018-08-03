@@ -1,10 +1,10 @@
-package com.galukhin.introvert.model.data;
+package com.galukhin.introvert.model.ex.data;
 
 
-import com.galukhin.introvert.model.PresentationType;
-import com.galukhin.introvert.model.locations.RelativePath;
-import com.galukhin.introvert.model.locations.Source;
-import com.galukhin.introvert.model.values.Value;
+import com.galukhin.introvert.model.ex.PresentationType;
+import com.galukhin.introvert.model.ex.locations.RelativePath;
+import com.galukhin.introvert.model.ex.locations.Source;
+import com.galukhin.introvert.model.ex.values.Value;
 
 /**
  * Container with data

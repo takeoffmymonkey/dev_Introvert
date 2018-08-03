@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.locations;
+package com.galukhin.introvert.model.ex.locations;
 
 /**
  * Represents a relative path to the value within the current Source/Target

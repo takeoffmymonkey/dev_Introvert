@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model;
+package com.galukhin.introvert.model.ex;
 
 /**
  * Represents type of data. May be input-type depend. Needed for the proper presentation of the data

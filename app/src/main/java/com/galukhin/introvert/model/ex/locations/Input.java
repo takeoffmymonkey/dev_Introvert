@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.locations;
+package com.galukhin.introvert.model.ex.locations;
 
 /**
  * Represents data input (where it comes from)

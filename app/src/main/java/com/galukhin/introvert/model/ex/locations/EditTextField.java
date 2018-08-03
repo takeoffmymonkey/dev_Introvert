@@ -1,11 +1,11 @@
-package com.galukhin.introvert.model.locations;
+package com.galukhin.introvert.model.ex.locations;
 
 import android.content.Context;
 import android.widget.EditText;
 
-import com.galukhin.introvert.model.PresentationType;
-import com.galukhin.introvert.model.data.Data;
-import com.galukhin.introvert.model.values.TextValue;
+import com.galukhin.introvert.model.ex.PresentationType;
+import com.galukhin.introvert.model.ex.data.Data;
+import com.galukhin.introvert.model.ex.values.TextValue;
 
 public class EditTextField implements Source, Target {
     EditText editText;

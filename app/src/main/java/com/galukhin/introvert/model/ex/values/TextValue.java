@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.values;
+package com.galukhin.introvert.model.ex.values;
 
 public class TextValue implements Value {
     String text;
