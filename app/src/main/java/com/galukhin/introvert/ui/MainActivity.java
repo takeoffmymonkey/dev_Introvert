@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -22,8 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new DbHelper(this);
-        final SQLiteDatabase database = MainActivity.dbHelper.getWritableDatabase();
-
 
         Button addNoteBt = findViewById(R.id.add_note);
         addNoteBt.setOnClickListener(new View.OnClickListener() {
@@ -31,44 +32,37 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,
                         NoteActivity.class);
+                intent.putExtra(NoteActivity.NOTE_ID, 0);
                 startActivity(intent);
             }
         });
+    }
 
 
-        Button dumpNotesBt = findViewById(R.id.dump_notes);
-        dumpNotesBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DbHelper.dumpNotesTable(database);
-            }
-        });
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.debug, menu);
+        return true;
+    }
 
-
-        Button deleteNotesBt = findViewById(R.id.delete_notes_table);
-        deleteNotesBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dbHelper.deleteNotesTable(MainActivity.dbHelper.getWritableDatabase());
-            }
-        });
-
-        Button createNotesBt = findViewById(R.id.create_notes_table);
-        createNotesBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dbHelper.createNotesTable(MainActivity.dbHelper.getWritableDatabase());
-            }
-        });
-
-
-        Button dumpLastNoteBt = findViewById(R.id.delete_notes_table);
-        dumpLastNoteBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dbHelper.dumpNoteTable(MainActivity.dbHelper.getWritableDatabase(), 0);
-            }
-        });
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        SQLiteDatabase database = dbHelper.getWritableDatabase();
+        switch (item.getItemId()) {
+            case R.id.create_notes_table:
+                dbHelper.createNotesTable(null);
+                return true;
+            case R.id.delete_notes_table:
+                dbHelper.deleteNotesTable(null);
+                return true;
+            case R.id.dump_notes_table:
+                dbHelper.dumpNotesTable(null);
+                return true;
+            case R.id.dump_last_note:
+                dbHelper.dumpNoteTable(null, 0);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
