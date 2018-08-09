@@ -66,6 +66,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void createNote() {
+        Log.i(TAG, "createNote");
         Log.i(TAG, "Creating note object");
 
         int code = getCode();

@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.dumpNotesTable(null);
                 return true;
             case R.id.dump_last_note:
-                dbHelper.dumpNoteTable(null, 0);
+                dbHelper.dumpNoteTable(null, dbHelper.notesCount(null));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -32,10 +32,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        Log.i(TAG, "DbHelper");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        Log.i(TAG, "OnCreate");
         createNotesTable(db);
     }
 
@@ -45,7 +47,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isExisting(SQLiteDatabase db, String table) {
-        Log.i(TAG, "Checking NOTES table existence");
+        Log.i(TAG, "isExisting");
+        Log.i(TAG, "Checking " + table + " table existence");
 
         if (db == null) db = getWritableDatabase();
 
@@ -61,11 +64,12 @@ public class DbHelper extends SQLiteOpenHelper {
             cursor.close();
         }
         Log.i(TAG, "Table doesn't exists");
-//        db.close();
         return false;
     }
 
     public void createNotesTable(SQLiteDatabase db) {
+        Log.i(TAG, "createNotesTable");
+
         if (db == null) db = getWritableDatabase();
         if (isExisting(db, NOTES_TABLE)) return;
 
@@ -78,10 +82,11 @@ public class DbHelper extends SQLiteOpenHelper {
                         + NOTES_CREATED_COLUMN + " INTEGER);";
 
         db.execSQL(SQL_CREATE_NOTES_TABLE);
-//        db.close();
     }
 
     public void deleteNotesTable(SQLiteDatabase db) {
+        Log.i(TAG, "deleteNotesTable");
+
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return;
 
@@ -91,10 +96,11 @@ public class DbHelper extends SQLiteOpenHelper {
                 "DROP TABLE IF EXISTS " + NOTES_TABLE;
 
         db.execSQL(SQL_DELETE_NOTES_TABLE);
-//        db.close();
     }
 
     public void addNote(SQLiteDatabase db, Note note) {
+        Log.i(TAG, "addNote");
+
         if (db == null) db = getWritableDatabase();
         int id = notesCount(db) + 1;
 
@@ -106,12 +112,81 @@ public class DbHelper extends SQLiteOpenHelper {
 
         long newRowId = db.insert(NOTES_TABLE, null, values);
         Log.i(TAG, "Inserted new row to NOTES table: " + newRowId);
-//        db.close();
 
         createNoteTable(null, note, id);
     }
 
+    public int notesCount(SQLiteDatabase db) {
+        Log.i(TAG, "notesCount");
+        if (db == null) db = getWritableDatabase();
+
+        Log.i(TAG, "Counting notes in NOTES table");
+        int n = -1;
+
+        String[] projection = {NOTES_ID_COLUMN};
+
+        Cursor c = db.query(
+                NOTES_TABLE,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        n = c.getCount();
+        c.close();
+        return n;
+    }
+
+    public void createNoteTable(SQLiteDatabase db, Note note, int id) {
+        Log.i(TAG, "createNoteTable");
+
+        if (db == null) db = getWritableDatabase();
+        if (isExisting(db, noteName(id))) return;
+
+        Log.i(TAG, "Creating " + noteName(id) + " table");
+
+        String SQL_CREATE_NOTE_TABLE =
+                "CREATE TABLE " + noteName(id) + " ("
+                        + NOTE_ID_COLUMN + " INTEGER PRIMARY KEY, "
+                        + NOTE_TYPE_COLUMN + " TEXT, "
+                        + NOTE_VALUE_COLUMN + " TEXT);";
+        db.execSQL(SQL_CREATE_NOTE_TABLE);
+
+        addNoteFields(null, id, note.getFields());
+    }
+
+    private void addNoteFields(SQLiteDatabase db, int id, List<Field> fields) {
+        Log.i(TAG, "addNoteFields");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, noteName(id))) return;
+
+        Log.i(TAG, "Adding note fields...");
+
+        ContentValues values;
+        for (Field field : fields) {
+            values = new ContentValues();
+            values.put(NOTE_TYPE_COLUMN, field.getType().name());
+            values.put(NOTE_VALUE_COLUMN, field.getValue().toString());
+            long newRowId = db.insert(noteName(id), null, values);
+            Log.i(TAG, "Inserted field to row " + newRowId);
+        }
+    }
+
+    public String noteName(int id) {
+        Log.i(TAG, "noteName");
+
+        return NOTE_TABLE_PT1 + id;
+    }
+
+
+    /* ~~~~~~~ DUMPING METHODS ~~~~~~~ */
     public void dumpNotesTable(SQLiteDatabase db) {
+        Log.i(TAG, "dumpNotesTable");
+
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return;
 
@@ -135,75 +210,11 @@ public class DbHelper extends SQLiteOpenHelper {
         }
         Log.e(TAG, "========================================================");
         c.close();
-//        db.close();
-    }
-
-
-    private int notesCount(SQLiteDatabase db) {
-        if (db == null) db = getWritableDatabase();
-
-        Log.i(TAG, "Counting notes in NOTES table");
-        int n = -1;
-
-        String[] projection = {NOTES_ID_COLUMN};
-
-        Cursor c = db.query(
-                NOTES_TABLE,   // The table to query
-                projection,             // The array of columns to return (pass null to get all)
-                null,              // The columns for the WHERE clause
-                null,          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null               // The sort order
-        );
-
-        n = c.getCount();
-        c.close();
-//        db.close();
-        return n;
-    }
-
-
-    public void createNoteTable(SQLiteDatabase db, Note note, int id) {
-        if (db == null) db = getWritableDatabase();
-        if (isExisting(db, noteName(id))) return;
-
-        Log.i(TAG, "Creating NOTE_" + id + " table");
-
-        String SQL_CREATE_NOTE_TABLE =
-                "CREATE TABLE " + noteName(id) + " ("
-                        + NOTE_ID_COLUMN + " INTEGER PRIMARY KEY, "
-                        + NOTE_TYPE_COLUMN + " TEXT, "
-                        + NOTE_VALUE_COLUMN + " TEXT);";
-        db.execSQL(SQL_CREATE_NOTE_TABLE);
-//        db.close();
-
-        addNoteFields(null, id, note.getFields());
-    }
-
-    private void addNoteFields(SQLiteDatabase db, int id, List<Field> fields) {
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, noteName(id))) return;
-
-        Log.i(TAG, "Adding note fields...");
-
-        ContentValues values;
-        for (Field field : fields) {
-            values = new ContentValues();
-            values.put(NOTE_TYPE_COLUMN, field.getType().name());
-            values.put(NOTE_VALUE_COLUMN, field.getValue().toString());
-            long newRowId = db.insert(noteName(id), null, values);
-            Log.i(TAG, "Inserted field to row " + newRowId);
-        }
-
-//        db.close();
-    }
-
-    public String noteName(int id) {
-        return NOTE_TABLE_PT1 + id;
     }
 
     public void dumpNoteTable(SQLiteDatabase db, int id) {
+        Log.i(TAG, "dumpNoteTable");
+
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, noteName(id))) return;
 
@@ -220,15 +231,14 @@ public class DbHelper extends SQLiteOpenHelper {
         for (int i = 0; i < c.getCount(); i++) {
             Log.i(TAG, "ID: " + c.getInt(c.getColumnIndex(NOTE_ID_COLUMN)));
             Log.i(TAG, "--------------------------------------------------------");
-            Log.i(TAG, "TYPE: " + c.getInt(c.getColumnIndex(NOTE_TYPE_COLUMN)));
+            Log.i(TAG, "TYPE: " + c.getString(c.getColumnIndex(NOTE_TYPE_COLUMN)));
             Log.i(TAG, "--------------------------------------------------------");
-            Log.i(TAG, "VALUE: " + c.getInt(c.getColumnIndex(NOTE_VALUE_COLUMN)));
+            Log.i(TAG, "VALUE: " + c.getString(c.getColumnIndex(NOTE_VALUE_COLUMN)));
             Log.i(TAG, "--------------------------------------------------------");
             c.moveToNext();
             Log.i(TAG, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
         }
         Log.e(TAG, "========================================================");
         c.close();
-//        db.close();
     }
 }

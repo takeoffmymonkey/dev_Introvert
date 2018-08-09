@@ -1,5 +1,6 @@
 package com.galukhin.introvert.model.luna;
 
+import android.util.Log;
 import android.widget.TextView;
 
 import com.galukhin.introvert.ui.MainActivity;
@@ -72,12 +73,19 @@ public class Note {
 
 
     public void save() {
+        Log.i(TAG, "save");
+
         prepareValues();
+
+        Log.i(TAG, "Saving to note to db");
         MainActivity.dbHelper.addNote(null, this);
         // TODO: 007 07 Aug 18 add updating functionality
     }
 
     private void prepareValues() {
+        Log.i(TAG, "prepareValues");
+        Log.i(TAG, "Preparing values for storing to db");
+
         for (Field field : fields) {
             // TODO: 007 07 Aug 18 this should be more generic
             String value = ((TextView) field.getView()).getText().toString();
