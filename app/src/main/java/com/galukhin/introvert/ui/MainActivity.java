@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     String TAG = "LUNA:" + getClass().getSimpleName();
 
     public static DbHelper dbHelper;
+    ListView listView;
     NotesAdapter adapter;
 
 
@@ -31,13 +32,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dbHelper = new DbHelper(this);
-
         createAddButton();
-
+        listView = findViewById(R.id.notes_list);
+        setOnClickListenerForList(listView);
         adapter = new NotesAdapter(
                 this, dbHelper.createNotesCursor(null));
-
-        ListView listView = findViewById(R.id.notes_list);
         listView.setAdapter(adapter);
     }
 
@@ -61,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
                 dbHelper.createNotesTable(null);
                 return true;
             case R.id.delete_notes_table:
-                dbHelper.deleteNotesTable(null);
+                dbHelper.deleteNotes(null);
+                updateCursor(adapter, dbHelper.createNotesCursor(null));
                 return true;
             case R.id.dump_notes_table:
                 dbHelper.dumpNotesTable(null);
@@ -87,9 +87,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void updateCursor(CursorAdapter adapter, Cursor cursor) {
         adapter.changeCursor(cursor);
     }
 
+    private void setOnClickListenerForList(ListView listView) {
+        listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            Intent intent = new Intent(MainActivity.this,
+                    NoteActivity.class);
+            intent.putExtra(NoteActivity.NOTE_ID, l);
+            startActivity(intent);
+        });
+    }
 }

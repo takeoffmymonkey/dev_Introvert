@@ -1,5 +1,6 @@
 package com.galukhin.introvert.model.luna;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -19,7 +20,7 @@ public class Note {
 
     String TAG = "LUNA:" + getClass().getSimpleName();
 
-    private int id;
+    private long id;
     private List<Field> fields;
     private boolean exists;
 
@@ -35,14 +36,14 @@ public class Note {
     /**
      * For existing note
      */
-    public Note(int id) {
+    public Note(long id, Context context) {
         this.id = id;
-        fields = Fields.getFieldsById(id);
+        fields = Fields.getFieldsById(id, context);
         exists = true;
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.galukhin.introvert.ui.MainActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,13 +14,13 @@ import java.util.List;
  */
 
 public class Fields {
-    public static Field createEditTextField(String text,
+    public static Field createEditTextField(String value,
                                             Context context) {
         EditText editText = new EditText(context);
         editText.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT));
-        if (text != null) editText.setText(text);
+        if (value != null) editText.setText(value);
         else editText.setText("test");
 
         return new Field(editText, Types.TEXT,
@@ -27,7 +29,7 @@ public class Fields {
 
 
     public static List<Field> createEditTextFields(int number,
-                                                   String text,
+                                                   String value,
                                                    Context context) {
         List<Field> fields = new ArrayList<>();
         for (int i = 0; i < number; i++) {
@@ -35,7 +37,7 @@ public class Fields {
             editText.setLayoutParams(new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT));
-            if (text != null) editText.setText(text);
+            if (value != null) editText.setText(value);
             else editText.setText("test");
             fields.add(new Field(editText, Types.TEXT,
                     new TextValue(Types.TEXT, null)));
@@ -43,9 +45,7 @@ public class Fields {
         return fields;
     }
 
-    public static List<Field> getFieldsById(int noteId) {
-        List<Field> fields = new ArrayList<>();
-        // TODO: 007 07 Aug 18 read table and make array of it
-        return fields;
+    public static List<Field> getFieldsById(long noteId, Context context) {
+        return MainActivity.dbHelper.getNoteFields(null, noteId, context);
     }
 }

@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -84,16 +85,32 @@ public class DbHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATE_NOTES_TABLE);
     }
 
-    public void deleteNotesTable(SQLiteDatabase db) {
-        Log.i(TAG, "deleteNotesTable");
+    public void deleteNotes(SQLiteDatabase db) {
+        Log.i(TAG, "deleteNotes");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return;
 
-        Log.i(TAG, "Deleting NOTES table");
+        int n = notesCount(db);
+
+        for (int i = 0; i < n; i++) {
+            deleteNoteTable(db, n);
+        }
 
         String SQL_DELETE_NOTES_TABLE =
                 "DROP TABLE IF EXISTS " + NOTES_TABLE;
+
+        db.execSQL(SQL_DELETE_NOTES_TABLE);
+    }
+
+    public void deleteNoteTable(SQLiteDatabase db, long id) {
+        Log.i(TAG, "deleteNoteTable");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, noteName(id))) return;
+
+        String SQL_DELETE_NOTES_TABLE =
+                "DROP TABLE IF EXISTS " + noteName(id);
 
         db.execSQL(SQL_DELETE_NOTES_TABLE);
     }
@@ -140,7 +157,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return n;
     }
 
-    public void createNoteTable(SQLiteDatabase db, Note note, int id) {
+    public void createNoteTable(SQLiteDatabase db, Note note, long id) {
         Log.i(TAG, "createNoteTable");
 
         if (db == null) db = getWritableDatabase();
@@ -158,7 +175,7 @@ public class DbHelper extends SQLiteOpenHelper {
         addNoteFields(null, id, note.getFields());
     }
 
-    private void addNoteFields(SQLiteDatabase db, int id, List<Field> fields) {
+    private void addNoteFields(SQLiteDatabase db, long id, List<Field> fields) {
         Log.i(TAG, "addNoteFields");
 
         if (db == null) db = getWritableDatabase();
@@ -176,12 +193,44 @@ public class DbHelper extends SQLiteOpenHelper {
         }
     }
 
-    public String noteName(int id) {
+    public List<Field> getNoteFields(SQLiteDatabase db, long id, Context context) {
+        Log.i(TAG, "getNoteFields");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, noteName(id))) return null;
+
+        String[] projection = {NOTE_TYPE_COLUMN, NOTE_VALUE_COLUMN};
+
+        Cursor c = db.query(
+                noteName(id),   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        List<Field> fields = new ArrayList<>();
+        Types t;
+        String v;
+
+        // TODO: 009 09 Aug 18 hardcoded!
+        while (c.moveToNext()) {
+            t = Types.valueOf(c.getString(c.getColumnIndex(NOTE_TYPE_COLUMN)));
+            v = c.getString(c.getColumnIndex(NOTE_VALUE_COLUMN));
+            fields.add(Fields.createEditTextField(v, context));
+        }
+
+        c.close();
+        return fields;
+    }
+
+    public String noteName(long id) {
         Log.i(TAG, "noteName");
 
         return NOTE_TABLE_PT1 + id;
     }
-
 
     public Cursor createNotesCursor(SQLiteDatabase db) {
         Log.i(TAG, "createNotesCursor");
@@ -203,7 +252,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 null               // The sort order
         );
     }
-
 
     /* ~~~~~~~ DUMPING METHODS ~~~~~~~ */
     public void dumpNotesTable(SQLiteDatabase db) {
@@ -234,7 +282,7 @@ public class DbHelper extends SQLiteOpenHelper {
         c.close();
     }
 
-    public void dumpNoteTable(SQLiteDatabase db, int id) {
+    public void dumpNoteTable(SQLiteDatabase db, long id) {
         Log.i(TAG, "dumpNoteTable");
 
         if (db == null) db = getWritableDatabase();

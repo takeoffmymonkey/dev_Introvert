@@ -36,7 +36,52 @@ public class NoteActivity extends AppCompatActivity {
         linearLayout = findViewById(R.id.note_layout);
 
         createNote();
+        createAddButton();
+        createSaveButton();
 
+    }
+
+    void saveNote() {
+        note.save();
+        Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show();
+    }
+
+    private void createNote() {
+        Log.i(TAG, "createNote");
+        Log.i(TAG, "Creating note object");
+
+        long code = getCode();
+        if (code == 0) { // This is a fresh note
+            template = new Template(Fields.createEditTextFields
+                    (3, "Text from template", this));
+            note = new Note(template);
+            addFieldsToLayout(note.getFields());
+        } else { // Existing note
+            note = new Note(code, this);
+            addFieldsToLayout(note.getFields());
+        }
+
+    }
+
+    private void addFieldsToLayout(List<Field> fields) {
+        Log.i(TAG, "Adding fields");
+
+        for (Field field : fields) {
+            linearLayout.addView(field.getView());
+        }
+    }
+
+    private long getCode() {
+        return getIntent().getLongExtra(NOTE_ID, 0);
+    }
+
+    @Override
+    public void finish() {
+        database.close();
+        super.finish();
+    }
+
+    private void createAddButton() {
         Button addBt = findViewById(R.id.add);
         addBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,7 +92,9 @@ public class NoteActivity extends AppCompatActivity {
                 note.addField(field);
             }
         });
+    }
 
+    private void createSaveButton() {
         Button saveBt = findViewById(R.id.save);
         saveBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,50 +103,5 @@ public class NoteActivity extends AppCompatActivity {
                 finish();
             }
         });
-    }
-
-    void saveNote() {
-        note.save();
-        Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show();
-    }
-
-    void deleteNote() {
-
-    }
-
-    private void createNote() {
-        Log.i(TAG, "createNote");
-        Log.i(TAG, "Creating note object");
-
-        int code = getCode();
-        if (code == 0) { // This is a fresh note
-            template = new Template(Fields.createEditTextFields
-                    (3, "Text from template", this));
-            note = new Note(template);
-            addFieldsToLayout(note.getFields());
-        } else { // Existing note
-            note = new Note(code);
-        }
-
-    }
-
-
-    private void addFieldsToLayout(List<Field> fields) {
-        Log.i(TAG, "Adding fields");
-
-        for (Field field : fields) {
-            linearLayout.addView(field.getView());
-        }
-    }
-
-
-    private int getCode() {
-        return getIntent().getIntExtra(NOTE_ID, 0);
-    }
-
-    @Override
-    public void finish() {
-        database.close();
-        super.finish();
     }
 }
