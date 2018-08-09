@@ -18,10 +18,10 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
 
     /*NOTES_TABLE*/
-    private static final String NOTES_TABLE = "Notes";
-    private static final String NOTES_ID_COLUMN = BaseColumns._ID;
-    private static final String NOTES_NAME_COLUMN = "Name";
-    private static final String NOTES_CREATED_COLUMN = "Created";
+    public static final String NOTES_TABLE = "Notes";
+    public static final String NOTES_ID_COLUMN = BaseColumns._ID;
+    public static final String NOTES_NAME_COLUMN = "Name";
+    public static final String NOTES_CREATED_COLUMN = "Created";
 
     /*NOTE_N TABLE*/
     public static String NOTE_TABLE_PT1 = "Note_";
@@ -180,6 +180,28 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "noteName");
 
         return NOTE_TABLE_PT1 + id;
+    }
+
+
+    public Cursor createNotesCursor(SQLiteDatabase db) {
+        Log.i(TAG, "createNotesCursor");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, NOTES_TABLE)) return null;
+
+        String[] projection = {NOTES_ID_COLUMN,
+                NOTES_NAME_COLUMN,
+                NOTES_CREATED_COLUMN};
+
+        return db.query(
+                NOTES_TABLE,   // The table to query
+                projection,             // The array of columns to return (pass null to get all)
+                null,              // The columns for the WHERE clause
+                null,          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
     }
 
 
