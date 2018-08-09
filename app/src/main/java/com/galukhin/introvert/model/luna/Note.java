@@ -64,7 +64,7 @@ public class Note {
     }
 
     public void addField(List<Field> fields) {
-        fields.addAll(fields);
+        this.fields.addAll(fields);
     }
 
     public void removeField(int i) {

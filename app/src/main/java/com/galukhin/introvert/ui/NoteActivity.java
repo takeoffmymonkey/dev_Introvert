@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna.Field;
@@ -59,6 +60,7 @@ public class NoteActivity extends AppCompatActivity {
 
     void saveNote() {
         note.save();
+        Toast.makeText(this, "Note saved", Toast.LENGTH_SHORT).show();
     }
 
     void deleteNote() {
