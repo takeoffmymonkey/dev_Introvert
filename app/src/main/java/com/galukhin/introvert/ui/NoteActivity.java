@@ -83,25 +83,19 @@ public class NoteActivity extends AppCompatActivity {
 
     private void createAddButton() {
         Button addBt = findViewById(R.id.add);
-        addBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                List<Field> field = Fields.createEditTextFields
-                        (1, "added", NoteActivity.this);
-                addFieldsToLayout(field);
-                note.addField(field);
-            }
+        addBt.setOnClickListener(view -> {
+            List<Field> field = Fields.createEditTextFields
+                    (1, "added", NoteActivity.this);
+            addFieldsToLayout(field);
+            note.addField(field);
         });
     }
 
     private void createSaveButton() {
         Button saveBt = findViewById(R.id.save);
-        saveBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                saveNote();
-                finish();
-            }
+        saveBt.setOnClickListener(view -> {
+            saveNote();
+            finish();
         });
     }
 }

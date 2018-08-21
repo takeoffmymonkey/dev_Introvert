@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbHelper = new DbHelper(this);
         createAddButton();
+        createTestButton();
         listView = findViewById(R.id.notes_list);
         setOnClickListenerForList(listView);
         adapter = new NotesAdapter(
@@ -54,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        SQLiteDatabase database = dbHelper.getWritableDatabase();
         switch (item.getItemId()) {
             case R.id.create_notes_table:
                 dbHelper.createNotesTable(null);
@@ -76,14 +76,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void createAddButton() {
         Button addNoteBt = findViewById(R.id.add_note);
-        addNoteBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,
-                        NoteActivity.class);
-                intent.putExtra(NoteActivity.NOTE_ID, 0);
-                startActivity(intent);
-            }
+        addNoteBt.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,
+                    NoteActivity.class);
+            intent.putExtra(NoteActivity.NOTE_ID, 0);
+            startActivity(intent);
+        });
+    }
+
+    private void createTestButton() {
+        Button test = findViewById(R.id.test_activity);
+        test.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this,
+                    TestActivity.class);
+            startActivity(intent);
         });
     }
 
