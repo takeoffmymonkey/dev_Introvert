@@ -15,8 +15,8 @@ public class NumericEditor extends Editor {
 
     public NumericEditor(Context context, Number value) {
         editText = new EditText(context);
-        editText.setInputType(InputType.TYPE_CLASS_NUMBER
-                | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
+        editText.setInputType(InputType.TYPE_CLASS_NUMBER |
+        InputType.TYPE_NUMBER_FLAG_DECIMAL);
         editText.setText(value.toString());
         this.value = new NumericData(value);
     }

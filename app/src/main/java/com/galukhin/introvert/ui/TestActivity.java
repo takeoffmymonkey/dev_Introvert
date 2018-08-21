@@ -6,7 +6,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
-import com.galukhin.introvert.model.luna2.editor.TextEditor;
+import com.galukhin.introvert.model.luna2.editor.MultiTextEditor;
 
 public class TestActivity extends AppCompatActivity {
     LinearLayout linearLayout;
@@ -25,8 +25,14 @@ public class TestActivity extends AppCompatActivity {
     private void createAddButton() {
         Button addBt = findViewById(R.id.add);
         addBt.setOnClickListener(view -> {
-            TextEditor textEditor = new TextEditor(this, "Enter text");
-            linearLayout.addView(textEditor.getEditText());
+//            TextEditor textEditor = new TextEditor(this, "Enter text");
+//            NumericEditor textEditor = new NumericEditor(this, 3);
+//            linearLayout.addView(textEditor.getEditText());
+
+            MultiTextEditor textEditor = new MultiTextEditor(
+                    new String[]{"s", "e"}, this);
+//            linearLayout.addView(textEditor.mainLl);
+            getLayoutInflater().inflate(R.layout.multi_text_editor, linearLayout);
         });
     }
 }

@@ -5,6 +5,10 @@ import com.galukhin.introvert.model.luna2.value.TextValue;
 public class TextData extends Data implements TextValue {
     String value;
 
+    public TextData(String value) {
+        this.value = value;
+    }
+
     @Override
     public void setValue(String value) {
         this.value = value;
