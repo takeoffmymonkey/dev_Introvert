@@ -1,14 +1,17 @@
 package com.galukhin.introvert.model.luna2.data;
 
-public class TextData extends Data {
-    String data;
+import com.galukhin.introvert.model.luna2.value.TextValue;
 
-    public TextData(String data) {
-        this.data = data;
+public class TextData extends Data implements TextValue {
+    String value;
+
+    @Override
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override
     public String toString() {
-        return data;
+        return value;
     }
 }

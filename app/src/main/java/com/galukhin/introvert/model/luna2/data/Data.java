@@ -1,5 +1,9 @@
 package com.galukhin.introvert.model.luna2.data;
 
+/**
+ * Hierarchy for Value interfaces' implementation
+ */
+
 public abstract class Data {
-    public abstract String toString();
+    abstract public String toString();
 }
