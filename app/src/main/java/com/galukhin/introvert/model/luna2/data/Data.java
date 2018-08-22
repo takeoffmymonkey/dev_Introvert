@@ -1,14 +1,22 @@
 package com.galukhin.introvert.model.luna2.data;
 
+public class Data<T> {
+    T data;
 
-/**
- * Hierarchy for Value interfaces' implementation
- */
+    public Data(T data) {
+        this.data = data;
+    }
 
-/**
- * Hierarchy for Value interfaces' implementation
- */
+    public void setData(T data) {
+        this.data = data;
+    }
 
-public abstract class Data {
-    abstract public String toString();
+    public T getData() {
+        return data;
+    }
+
+    @Override
+    public String toString() {
+        return data.toString();
+    }
 }

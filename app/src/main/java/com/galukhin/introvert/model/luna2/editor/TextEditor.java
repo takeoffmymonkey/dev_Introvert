@@ -1,14 +1,10 @@
-package com.galukhin.introvert.model.luna2.editor;
+/*package com.galukhin.introvert.model.luna2.editor;
 
 import android.content.Context;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
-import com.galukhin.introvert.model.luna2.data.TextData;
-import com.galukhin.introvert.model.luna2.value.TextValue;
-import com.galukhin.introvert.model.luna2.value.Value;
-
-public class TextEditor extends Editor {
+public class TextEditor extends BaseEditor {
     TextValue value;
 
     EditText editText;
@@ -39,4 +35,4 @@ public class TextEditor extends Editor {
         this.value.setValue(value);
     }
 
-}
+}*/
