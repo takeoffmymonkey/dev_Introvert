@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/base_editor_ll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -10,24 +9,25 @@
         android:layout_height="10dp"
         android:background="@android:color/black" />
 
+
     <LinearLayout
-        android:id="@+id/base_editor_ll_horiz"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/base_editor_tv"
+            android:id="@+id/base_editor_name_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="name:" />
 
         <EditText
-            android:id="@+id/base_editor_et"
+            android:id="@+id/base_editor_text_et"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="text" />
+
     </LinearLayout>
 
 

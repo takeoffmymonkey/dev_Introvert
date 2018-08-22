@@ -3,7 +3,6 @@ package com.galukhin.introvert.ui;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
@@ -27,7 +26,7 @@ public class TestActivity extends AppCompatActivity {
         Button addBt = findViewById(R.id.add);
         addBt.setOnClickListener(view -> {
             Data data = new Data("test");
-            BaseEditor textEditor = new BaseEditor(this, ll, data);
+            BaseEditor textEditor = new BaseEditor(this, ll, "the", data);
             ll.addView(textEditor.getEditor());
         });
     }
