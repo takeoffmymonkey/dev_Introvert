@@ -26,7 +26,7 @@ public class TestActivity extends AppCompatActivity {
         Button addBt = findViewById(R.id.add);
         addBt.setOnClickListener(view -> {
             Data data = new Data("test");
-            BaseEditor textEditor = new BaseEditor(this, ll, "the", data);
+            BaseEditor textEditor = new BaseEditor(this, ll, "the", data, false);
             ll.addView(textEditor.getEditor());
         });
     }

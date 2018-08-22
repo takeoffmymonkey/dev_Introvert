@@ -8,26 +8,12 @@ import java.util.Set;
  * Defines permitted range for data and ways of manipulating it.
  */
 
-public class DataRange<T> {
-    private Set<Data<T>> range;
+public interface DataRange<T> {
+    boolean inRange(Data<T> value);
 
-    public DataRange(Set<Data<T>> range) {
-        this.range = range;
-    }
+    void add(Data<T> value);
 
-    public Set<Data<T>> getRange() {
-        return range;
-    }
+    void remove(Data<T> value);
 
-    public boolean inRange(Data<T> value) {
-        return range.contains(value);
-    }
-
-    public void add(Data<T> value) {
-        range.add(value);
-    }
-
-    public void remove(Data<T> value) {
-        range.remove(value);
-    }
+    Set<Data<T>> getRange();
 }
