@@ -1,7 +1,12 @@
 package com.galukhin.introvert.model.luna2.data;
 
+/**
+ * A basic container for data.
+ * Implies String if used as a raw type.
+ */
+
 public class Data<T> {
-    T data;
+    private T data;
 
     public Data(T data) {
         this.data = data;

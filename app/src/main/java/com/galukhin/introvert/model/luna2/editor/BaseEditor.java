@@ -9,13 +9,13 @@ import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
 
 /**
- * Hierarchy for presenting and editing data
+ * Presents and edits basic data (i.e. String)
  */
 
 public class BaseEditor<T> {
-    Data<T> data;
-    View editor;
-    Activity activity;
+    private Data<T> data;
+    private View editor;
+    private Activity activity;
 
     public BaseEditor(Activity activity, ViewGroup root, Data<T> data) {
         this.data = data;
