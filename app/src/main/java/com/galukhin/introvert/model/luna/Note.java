@@ -80,7 +80,7 @@ public class Note {
 
         Log.i(TAG, "Saving to note to db");
         MainActivity.dbHelper.addNote(null, this);
-        // TODO: 007 07 Aug 18 add updating functionality
+        // TODO: 007 07 Aug 18 addToRange updating functionality
     }
 
     private void prepareValues() {

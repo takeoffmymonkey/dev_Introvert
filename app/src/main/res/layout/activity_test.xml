@@ -7,15 +7,23 @@
     tools:context=".ui.TestActivity">
 
     <Button
-        android:id="@+id/add"
+        android:id="@+id/add_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="add" />
+        android:text="add text" />
+
+    <Button
+        android:id="@+id/add_tags"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="add tags" />
 
     <LinearLayout
         android:id="@+id/test_layout_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical">
+
+    </LinearLayout>
 
 </android.widget.LinearLayout>
