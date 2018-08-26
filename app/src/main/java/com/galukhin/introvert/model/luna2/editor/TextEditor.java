@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
 
+import java.util.List;
+
 /**
  * Presents and edits basic data (i.e. String)
  */
@@ -19,7 +21,7 @@ public class TextEditor extends Editor<String> {
     private TextView nameTv;
 
 
-    public TextEditor(Activity activity, ViewGroup root, Data<String> data,
+    public TextEditor(Activity activity, ViewGroup root, List<Data<String>> data,
                       String name, boolean numeric) {
         super(activity, root, R.layout.base_editor, data);
 
@@ -30,7 +32,7 @@ public class TextEditor extends Editor<String> {
         else nameTv.setText(name);
 
         this.data = data;
-        textEt.setText(data.toString());
+        textEt.setText(data.get(0).toString());
 
         if (numeric) textEt.setInputType(InputType.TYPE_CLASS_NUMBER
                 | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -38,14 +40,17 @@ public class TextEditor extends Editor<String> {
 
 
     @Override
-    public Data<String> getData() {
-        data.setData(textEt.getText().toString());
+    public List<Data<String>> getData() {
+        String current = textEt.getText().toString();
+        data.clear();
+        data.add(new Data<>(current));
         return data;
     }
 
     @Override
-    public void setData(Data<String> data) {
-        textEt.setText(data.toString());
+    public void setData(List<Data<String>> data) {
+        String val = data.get(0).toString();
+        textEt.setText(val);
         this.data = data;
     }
 }

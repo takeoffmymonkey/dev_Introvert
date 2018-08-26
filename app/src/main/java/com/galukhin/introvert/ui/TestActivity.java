@@ -7,11 +7,11 @@ import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.editor.TagsEditor;
+import com.galukhin.introvert.model.luna2.editor.CatEditor;
 import com.galukhin.introvert.model.luna2.editor.TextEditor;
-import com.galukhin.introvert.model.luna2.range.DataRange;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
@@ -25,32 +25,30 @@ public class TestActivity extends AppCompatActivity {
         ll = findViewById(R.id.test_layout_ll);
 
         createAddTextButton();
-        createAddTagsButton();
+        createAddCatButton();
 
     }
 
     private void createAddTextButton() {
         Button addTextBt = findViewById(R.id.add_text);
         addTextBt.setOnClickListener(view -> {
-            Data data = new Data("test");
+            Data<String> d = new Data<>("test");
+            List<Data<String>> data = new ArrayList<>();
+            data.add(d);
             TextEditor textEditor = new TextEditor(this, ll, data, "the", false);
             ll.addView(textEditor.getEditor());
         });
     }
 
-    private void createAddTagsButton() {
-        Button addTagsBt = findViewById(R.id.add_tags);
-        addTagsBt.setOnClickListener(view -> {
-            List<Data<String>> list = new ArrayList<>();
-            list.add(new Data<>("asda"));
-            list.add(new Data<>("r4"));
-            list.add(new Data<>("awe4da"));
-            list.add(new Data<>("aaaaa"));
-            DataRange<String> range = new DataRange<>(list);
-
-            TagsEditor<String> tagsEditor = new TagsEditor<>(this, ll,
-                    new Data<>("dfs"), range);
-            ll.addView(tagsEditor.getEditor());
+    private void createAddCatButton() {
+        Button addCatsBt = findViewById(R.id.add_cats);
+        addCatsBt.setOnClickListener(view -> {
+            List<Data<String>> data = new ArrayList<>();
+            List<String> cats = Arrays.asList("1", "2", "3");
+            List<String> subCats = Arrays.asList("11", "22", "33");
+            CatEditor<String> catEditor = new CatEditor<>
+                    (this, ll, data, cats, subCats);
+            ll.addView(catEditor.getEditor());
         });
     }
 }
