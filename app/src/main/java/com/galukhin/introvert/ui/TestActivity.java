@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
+import com.galukhin.introvert.model.luna2.data.Categories;
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.editor.CatEditor;
 import com.galukhin.introvert.model.luna2.editor.TextEditor;
@@ -46,8 +47,10 @@ public class TestActivity extends AppCompatActivity {
             List<Data<String>> data = new ArrayList<>();
             List<String> cats = Arrays.asList("1", "2", "3");
             List<String> subCats = Arrays.asList("11", "22", "33");
+            Categories categories = new Categories(cats, subCats);
+
             CatEditor<String> catEditor = new CatEditor<>
-                    (this, ll, data, cats, subCats);
+                    (this, ll, data, categories);
             ll.addView(catEditor.getEditor());
         });
     }

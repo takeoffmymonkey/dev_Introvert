@@ -14,7 +14,7 @@
             android:id="@+id/tags_editor_search_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Search:" />
+            android:text="Tag:" />
 
         <AutoCompleteTextView
             android:id="@+id/tags_editor_tag_actv"

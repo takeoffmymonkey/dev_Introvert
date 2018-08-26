@@ -15,7 +15,7 @@ public abstract class Editor<T> {
     View editor;
     List<Data<T>> data;
 
-    public Editor(Activity activity, ViewGroup root, int editor, List<Data<T>> data) {
+    Editor(Activity activity, ViewGroup root, int editor, List<Data<T>> data) {
         this.data = data;
         this.activity = activity;
         this.root = root;

@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
@@ -20,12 +20,11 @@ public class TagsEditor<T> extends Editor<T> {
     private AutoCompleteTextView tagAcTv;
     private Button addBt;
     private LinearLayout tagsLl;
-    private List<Spinner> tagSpinners = new ArrayList<>();
+
+    private List<TextView> tagsTvs = new ArrayList<>();
     private List<Button> removeBts = new ArrayList<>();
 
-    private DataRange<T> range;
-    ArrayAdapter<String> adapter;
-
+    private List<String> allTags;
 
     public TagsEditor(Activity activity, ViewGroup root,
                       Data<T> data, DataRange<T> range) {
@@ -56,15 +55,5 @@ public class TagsEditor<T> extends Editor<T> {
         addBt = editor.findViewById(R.id.tags_editor_add_bt);
     }
 
-    private void addTagSelector(LinearLayout ll, ArrayAdapter<String> adapter) {
-        Spinner spinner = new Spinner(activity);
-        spinner.setAdapter(adapter);
-        tagSpinners.add(spinner);
-        ll.addView(spinner);
-
-        Button button = new Button(activity);
-        button.setText("X");
-        removeBts.add(button);
-        ll.addView(button);
-    }
-}*/
+}
+*/
