@@ -6,19 +6,19 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 /**
- * Represents available categories for CatEditor.
+ * Represents available categories for CatsEditor.
  */
 
-public class Categories {
+public class Cats {
     private List<String> cats;
     private List<String> subCats;
 
-    public Categories(List<String> cats, List<String> subCats) {
+    public Cats(List<String> cats, List<String> subCats) {
         this.cats = cats;
         this.subCats = subCats;
     }
 
-    public Categories(String table) {
+    public Cats(String table) {
         // TODO: 026 26 Aug 18 get lists via db
     }
 

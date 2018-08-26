@@ -23,7 +23,7 @@ public class TextEditor extends Editor<String> {
 
     public TextEditor(Activity activity, ViewGroup root, List<Data<String>> data,
                       String name, boolean numeric) {
-        super(activity, root, R.layout.base_editor, data);
+        super(activity, root, R.layout.text_editor, data);
 
         textEt = this.editor.findViewById(R.id.base_editor_text_et);
         nameTv = this.editor.findViewById(R.id.base_editor_name_tv);

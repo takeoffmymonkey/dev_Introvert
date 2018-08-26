@@ -6,9 +6,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
-import com.galukhin.introvert.model.luna2.data.Categories;
+import com.galukhin.introvert.model.luna2.data.Cats;
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.editor.CatEditor;
+import com.galukhin.introvert.model.luna2.data.Tags;
+import com.galukhin.introvert.model.luna2.editor.CatsEditor;
+import com.galukhin.introvert.model.luna2.editor.TagsEditor;
 import com.galukhin.introvert.model.luna2.editor.TextEditor;
 
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ public class TestActivity extends AppCompatActivity {
 
         createAddTextButton();
         createAddCatButton();
+        createAddTagButton();
+
 
     }
 
@@ -47,11 +51,24 @@ public class TestActivity extends AppCompatActivity {
             List<Data<String>> data = new ArrayList<>();
             List<String> cats = Arrays.asList("1", "2", "3");
             List<String> subCats = Arrays.asList("11", "22", "33");
-            Categories categories = new Categories(cats, subCats);
+            Cats categories = new Cats(cats, subCats);
 
-            CatEditor<String> catEditor = new CatEditor<>
+            CatsEditor<String> catsEditor = new CatsEditor<>
                     (this, ll, data, categories);
-            ll.addView(catEditor.getEditor());
+            ll.addView(catsEditor.getEditor());
         });
+    }
+
+    private void createAddTagButton() {
+        Button addTagsBt = findViewById(R.id.add_tags);
+        addTagsBt.setOnClickListener(view -> {
+            List<Data<String>> data = new ArrayList<>();
+            List<String> tagss = Arrays.asList("ttt", "jjjjj", "gggg", "bbbbb");
+            Tags tags = new Tags(tagss);
+            TagsEditor<String> tagsEditor = new TagsEditor<>
+                    (this, ll, data, tags);
+            ll.addView(tagsEditor.getEditor());
+        });
+
     }
 }

@@ -5,18 +5,18 @@ import android.view.ViewGroup;
 import android.widget.Spinner;
 
 import com.galukhin.introvert.R;
-import com.galukhin.introvert.model.luna2.data.Categories;
+import com.galukhin.introvert.model.luna2.data.Cats;
 import com.galukhin.introvert.model.luna2.data.Data;
 
 import java.util.List;
 
-public class CatEditor<T> extends Editor<T> {
+public class CatsEditor<T> extends Editor<T> {
     private Spinner catSp;
     private Spinner subCatSp;
-    private Categories cats;
+    private Cats cats;
 
-    public CatEditor(Activity activity, ViewGroup root, List<Data<T>> data,
-                     Categories cats) {
+    public CatsEditor(Activity activity, ViewGroup root, List<Data<T>> data,
+                      Cats cats) {
         super(activity, root, R.layout.cats_editor, data);
         this.cats = cats;
 

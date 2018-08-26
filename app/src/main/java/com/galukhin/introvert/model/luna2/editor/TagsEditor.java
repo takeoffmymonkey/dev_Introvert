@@ -1,59 +1,68 @@
-/*
 package com.galukhin.introvert.model.luna2.editor;
 
 import android.app.Activity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.range.DataRange;
+import com.galukhin.introvert.model.luna2.data.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TagsEditor<T> extends Editor<T> {
-    private AutoCompleteTextView tagAcTv;
+    private ViewGroup tagsLl;
     private Button addBt;
-    private LinearLayout tagsLl;
+    private AutoCompleteTextView tagAcTv;
+
+    private Tags tags;
 
     private List<TextView> tagsTvs = new ArrayList<>();
     private List<Button> removeBts = new ArrayList<>();
 
-    private List<String> allTags;
-
     public TagsEditor(Activity activity, ViewGroup root,
-                      Data<T> data, DataRange<T> range) {
+                      List<Data<T>> data, Tags tags) {
         super(activity, root, R.layout.tags_editor, data);
-        this.range = range;
+        this.tags = tags;
 
-        adapter = new ArrayAdapter<>(activity,
-                android.R.layout.simple_dropdown_item_1line,
-                range.asStringArray());
-
-        addAutoCompleteTv(adapter);
-        addAddBt();
-        addTagsZone();
-    }
-
-    private void addTagsZone() {
         tagsLl = editor.findViewById(R.id.tags_editor_tags_ll_vert);
-        addTagSelector(tagsLl, adapter);
-    }
-
-    private void addAutoCompleteTv(ArrayAdapter<String> adapter) {
-        tagAcTv = editor.findViewById(R.id.tags_editor_tag_actv);
-        tagAcTv.setThreshold(1);
-        tagAcTv.setAdapter(adapter);
-    }
-
-    private void addAddBt() {
         addBt = editor.findViewById(R.id.tags_editor_add_bt);
+        tagAcTv = editor.findViewById(R.id.tags_editor_tag_actv);
+
+        prepareAcTv();
+        createTagsZone();
     }
 
+    private void prepareAcTv() {
+        tagAcTv.setThreshold(1);
+        tagAcTv.setOnItemClickListener((adapterView, view, i, l) -> {
+            String selected = (String) adapterView.getItemAtPosition(i);
+            addTag(selected);
+            tagAcTv.setText("");
+        });
+        tagAcTv.setAdapter(tags.tagsAdapter(activity));
+    }
+
+    private void createTagsZone() {
+
+    }
+
+    private void addTag(String selected) {
+        View tagsZone = LayoutInflater.from(activity).inflate
+                (R.layout.tags_editor_tag, tagsLl, false);
+
+        TextView tagTv = tagsZone.findViewById(R.id.tags_editor_tag_tv);
+        Button removeBt = tagsZone.findViewById(R.id.tags_editor_tag_remove_bt);
+        tagsTvs.add(tagTv);
+        removeBts.add(removeBt);
+
+        tagTv.setText(selected);
+
+        tagsLl.addView(tagsZone);
+    }
 }
-*/
