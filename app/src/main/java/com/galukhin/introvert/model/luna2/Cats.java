@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.luna2.data;
+package com.galukhin.introvert.model.luna2;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;

@@ -12,24 +12,15 @@
         android:layout_height="wrap_content"
         android:text="add text" />
 
-    <Button
-        android:id="@+id/add_cats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add cats" />
-
-    <Button
-        android:id="@+id/add_tags"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="add tags" />
-
-    <LinearLayout
-        android:id="@+id/test_layout_ll"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/test_layout_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
 
 </android.widget.LinearLayout>

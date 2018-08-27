@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
+import com.galukhin.introvert.model.luna2.data.TextData;
 
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class TextEditor extends Editor<String> {
     public List<Data<String>> getData() {
         String current = textEt.getText().toString();
         data.clear();
-        data.add(new Data<>(current));
+        data.add(new TextData(current));
         return data;
     }
 

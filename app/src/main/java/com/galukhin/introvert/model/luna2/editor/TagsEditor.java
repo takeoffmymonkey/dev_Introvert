@@ -9,13 +9,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.galukhin.introvert.R;
+import com.galukhin.introvert.model.luna2.Tags;
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.data.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagsEditor<T> extends Editor<T> {
+public class TagsEditor extends Editor<String> {
     private ViewGroup tagsLl;
     private Button addBt;
     private AutoCompleteTextView tagAcTv;
@@ -26,7 +26,7 @@ public class TagsEditor<T> extends Editor<T> {
     private List<Button> removeBts = new ArrayList<>();
 
     public TagsEditor(Activity activity, ViewGroup root,
-                      List<Data<T>> data, Tags tags) {
+                      List<Data<String>> data, Tags tags) {
         super(activity, root, R.layout.tags_editor, data);
         this.tags = tags;
 
@@ -35,7 +35,6 @@ public class TagsEditor<T> extends Editor<T> {
         tagAcTv = editor.findViewById(R.id.tags_editor_tag_actv);
 
         prepareAcTv();
-        createTagsZone();
     }
 
     private void prepareAcTv() {
@@ -46,10 +45,6 @@ public class TagsEditor<T> extends Editor<T> {
             tagAcTv.setText("");
         });
         tagAcTv.setAdapter(tags.tagsAdapter(activity));
-    }
-
-    private void createTagsZone() {
-
     }
 
     private void addTag(String selected) {

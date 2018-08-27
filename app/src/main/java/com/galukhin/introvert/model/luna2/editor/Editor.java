@@ -33,4 +33,8 @@ public abstract class Editor<T> {
     public View getEditor() {
         return editor;
     }
+
+    public void disable() {
+        editor.setVisibility(View.GONE);
+    }
 }

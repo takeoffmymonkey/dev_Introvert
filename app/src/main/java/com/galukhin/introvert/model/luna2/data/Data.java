@@ -5,11 +5,14 @@ package com.galukhin.introvert.model.luna2.data;
  * Implies String if used as a raw type.
  */
 
-public class Data<T> {
+public abstract class Data<T> {
     private T data;
+    private DataTypes type;
 
-    public Data(T data) {
+
+    public Data(T data, DataTypes type) {
         this.data = data;
+        this.type = type;
     }
 
     public void setData(T data) {
@@ -18,6 +21,10 @@ public class Data<T> {
 
     public T getData() {
         return data;
+    }
+
+    public DataTypes getType() {
+        return type;
     }
 
     @Override
