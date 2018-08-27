@@ -5,10 +5,12 @@ import android.view.ViewGroup;
 
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.data.TextData;
-import com.galukhin.introvert.model.luna2.editor.CatsEditor;
-import com.galukhin.introvert.model.luna2.editor.Editor;
-import com.galukhin.introvert.model.luna2.editor.TagsEditor;
-import com.galukhin.introvert.model.luna2.editor.TextEditor;
+import com.galukhin.introvert.model.luna2.editors.CatsEditor;
+import com.galukhin.introvert.model.luna2.editors.Editor;
+import com.galukhin.introvert.model.luna2.editors.TagsEditor;
+import com.galukhin.introvert.model.luna2.editors.TextEditor;
+import com.galukhin.introvert.model.luna2.managers.CatsManager;
+import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,15 +44,15 @@ public class Template {
     private void addCatsEditor() {
         List<String> cats = Arrays.asList("1", "2", "3");
         List<String> subCats = Arrays.asList("11", "22", "33");
-        Cats catz = new Cats(cats, subCats);
+        CatsManager catz = new CatsManager(cats, subCats);
         Editor editor = new CatsEditor(activity, root, note.cats, catz);
         editors.add(editor);
         root.addView(editor.getEditor());
     }
 
     private void addTagsEditor() {
-        Tags tags = new Tags(Arrays.asList("ad", "try", "yyyyy"));
-        Editor editor = new TagsEditor(activity, root, note.tags, tags);
+        TagsManager tagsManager = new TagsManager(Arrays.asList("ad", "try", "yyyyy"));
+        Editor editor = new TagsEditor(activity, root, note.tags, tagsManager);
         editors.add(editor);
         root.addView(editor.getEditor());
     }

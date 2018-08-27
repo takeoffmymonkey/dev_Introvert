@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.luna2.editor;
+package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.luna2;
+package com.galukhin.introvert.model.luna2.managers;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;
@@ -11,14 +11,14 @@ import java.util.List;
  * Represents available tags for TagsEditor.
  */
 
-public class Tags {
+public class TagsManager {
     private List<String> tags;
 
-    public Tags(List<String> tags) {
+    public TagsManager(List<String> tags) {
         this.tags = tags;
     }
 
-    public Tags(String table) {
+    public TagsManager(String table) {
         // TODO: 026 26 Aug 18 get list via db
     }
 

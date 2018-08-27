@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.luna2.editor;
+package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,8 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.galukhin.introvert.R;
-import com.galukhin.introvert.model.luna2.Tags;
 import com.galukhin.introvert.model.luna2.data.TextListData;
+import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +20,24 @@ public class TagsEditor extends Editor {
     private Button addBt;
     private AutoCompleteTextView tagAcTv;
 
-    private Tags tags;
+    private TagsManager tagsManager;
 
     private List<TextView> tagsTvs = new ArrayList<>();
     private List<Button> removeBts = new ArrayList<>();
 
     public TagsEditor(Activity activity, ViewGroup root,
-                      TextListData data, Tags tags) {
+                      TextListData data, TagsManager tagsManager) {
         super(activity, root, R.layout.tags_editor, data);
-        this.tags = tags;
+        this.tagsManager = tagsManager;
 
         tagsLl = editor.findViewById(R.id.tags_editor_tags_ll_vert);
         addBt = editor.findViewById(R.id.tags_editor_add_bt);
         tagAcTv = editor.findViewById(R.id.tags_editor_tag_actv);
 
         prepareAcTv();
+        prepareTags(data);
     }
+
 
     private void prepareAcTv() {
         tagAcTv.setThreshold(1);
@@ -44,7 +46,14 @@ public class TagsEditor extends Editor {
             addTag(selected);
             tagAcTv.setText("");
         });
-        tagAcTv.setAdapter(tags.tagsAdapter(activity));
+        tagAcTv.setAdapter(tagsManager.tagsAdapter(activity));
+    }
+
+    private void prepareTags(TextListData data) {
+        List<String> list = data.getData();
+        for (String s : list) {
+            addTag(s);
+        }
     }
 
     private void addTag(String selected) {

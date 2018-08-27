@@ -1,4 +1,4 @@
-package com.galukhin.introvert.model.luna2;
+package com.galukhin.introvert.model.luna2.managers;
 
 import android.app.Activity;
 import android.widget.ArrayAdapter;
@@ -9,16 +9,16 @@ import java.util.List;
  * Represents available categories for CatsEditor.
  */
 
-public class Cats {
+public class CatsManager {
     private List<String> cats;
     private List<String> subCats;
 
-    public Cats(List<String> cats, List<String> subCats) {
+    public CatsManager(List<String> cats, List<String> subCats) {
         this.cats = cats;
         this.subCats = subCats;
     }
 
-    public Cats(String table) {
+    public CatsManager(String table) {
         // TODO: 026 26 Aug 18 get lists via db
     }
 
