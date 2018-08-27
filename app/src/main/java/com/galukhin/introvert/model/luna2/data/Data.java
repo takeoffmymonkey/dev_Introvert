@@ -7,12 +7,9 @@ package com.galukhin.introvert.model.luna2.data;
 
 public abstract class Data<T> {
     private T data;
-    private DataTypes type;
 
-
-    public Data(T data, DataTypes type) {
+    public Data(T data) {
         this.data = data;
-        this.type = type;
     }
 
     public void setData(T data) {
@@ -21,10 +18,6 @@ public abstract class Data<T> {
 
     public T getData() {
         return data;
-    }
-
-    public DataTypes getType() {
-        return type;
     }
 
     @Override

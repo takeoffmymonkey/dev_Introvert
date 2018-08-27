@@ -8,12 +8,7 @@ import android.widget.LinearLayout;
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.Note;
 import com.galukhin.introvert.model.luna2.Template;
-import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.data.DataTypes;
 import com.galukhin.introvert.model.luna2.data.TextData;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestActivity extends AppCompatActivity {
     LinearLayout ll;
@@ -35,9 +30,8 @@ public class TestActivity extends AppCompatActivity {
     private void createAddTextButton() {
         Button addTextBt = findViewById(R.id.add_text);
         addTextBt.setOnClickListener(view -> {
-            List<Data<String>> data = new ArrayList<>();
-            data.add(new TextData(""));
-            template.add(DataTypes.TEXT, data);
+            TextData data = new TextData("");
+            template.add(data);
         });
     }
 }

@@ -4,10 +4,11 @@ import android.app.Activity;
 import android.view.ViewGroup;
 
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.data.DataTypes;
+import com.galukhin.introvert.model.luna2.data.TextData;
 import com.galukhin.introvert.model.luna2.editor.CatsEditor;
 import com.galukhin.introvert.model.luna2.editor.Editor;
 import com.galukhin.introvert.model.luna2.editor.TagsEditor;
+import com.galukhin.introvert.model.luna2.editor.TextEditor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,39 +35,44 @@ public class Template {
         this.root = root;
         this.note = note;
 
-        addEditor(DataTypes.CATEGORY, null);
-        addEditor(DataTypes.TAG, null);
+        addCatsEditor();
+        addTagsEditor();
     }
 
-    public <T> void add(DataTypes type, List<Data<T>> datas) {
-        addEditor(type, datas);
-    }
-
-    private <T> void addEditor(DataTypes type, List<Data<T>> datas) {
-        Editor<?> editor = createEditor(type, datas);
+    private void addCatsEditor() {
+        List<String> cats = Arrays.asList("1", "2", "3");
+        List<String> subCats = Arrays.asList("11", "22", "33");
+        Cats catz = new Cats(cats, subCats);
+        Editor editor = new CatsEditor(activity, root, note.cats, catz);
         editors.add(editor);
         root.addView(editor.getEditor());
     }
 
-    private <T> Editor<?> createEditor(DataTypes type, List<Data<T>> datas) {
-        Editor<?> editor = null;
-        switch (type) {
-            case CATEGORY:
-                List<String> cats = Arrays.asList("1", "2", "3");
-                List<String> subCats = Arrays.asList("11", "22", "33");
-                Cats catz = new Cats(cats, subCats);
-                editor = new CatsEditor(activity, root, note.cats, catz);
-                break;
-            case TAG:
-                Tags tags = new Tags(Arrays.asList("ad", "try", "yyyyy"));
-                editor = new TagsEditor(activity, root, note.tags, tags);
-                break;
-            case TEXT:
-                if (datas == null) datas = new ArrayList<>();
-//                TextEditor textEditor = new TextEditor
-//                        (activity, root, datas, "the", false);
-                break;
+    private void addTagsEditor() {
+        Tags tags = new Tags(Arrays.asList("ad", "try", "yyyyy"));
+        Editor editor = new TagsEditor(activity, root, note.tags, tags);
+        editors.add(editor);
+        root.addView(editor.getEditor());
+    }
+
+    public void add(Data data) {
+        addEditor(data);
+    }
+
+    private void addEditor(Data data) {
+        Editor editor = createEditor(data);
+        editors.add(editor);
+        root.addView(editor.getEditor());
+    }
+
+    private Editor createEditor(Data data) {
+        Editor editor = null;
+
+        if (data instanceof TextData) {
+            editor = new TextEditor(activity, root, (TextData) data,
+                    "the", false);
         }
+
         return editor;
     }
 }

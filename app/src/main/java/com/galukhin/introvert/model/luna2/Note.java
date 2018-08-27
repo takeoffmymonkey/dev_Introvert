@@ -2,29 +2,32 @@ package com.galukhin.introvert.model.luna2;
 
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.data.TextData;
+import com.galukhin.introvert.model.luna2.data.TextListData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Note {
-    List<Data<String>> cats = new ArrayList<>();
+    TextListData cats;
 
     {
-        cats.add(new TextData("2"));
-        cats.add(new TextData("22"));
+        List<String> c = new ArrayList<>();
+        c.add("2");
+        c.add("22");
+        cats = new TextListData(c);
     }
 
-
-    List<Data<String>> tags = new ArrayList<>();
+    TextListData tags;
 
     {
-        tags.add(new TextData("gbgfggb"));
-        tags.add(new TextData("gbsdfsdfggb"));
-        tags.add(new TextData("gbgwewwqwwqwdfggb"));
+        List<String> t = new ArrayList<>();
+        t.add("gbgfggb");
+        t.add("gbsdfsdfggb");
+        t.add("gbgwewwqwwqwdfggb");
+        tags = new TextListData(t);
     }
 
-
-    List<Data<?>> datas = new ArrayList<>();
+    List<Data> datas = new ArrayList<>();
 
     {
         datas.add(new TextData("4435"));
@@ -33,15 +36,15 @@ public class Note {
         datas.add(new TextData("235"));
     }
 
-    public List<Data<String>> getCats() {
+    public TextListData getCats() {
         return cats;
     }
 
-    public List<Data<String>> getTags() {
+    public TextListData getTags() {
         return tags;
     }
 
-    public List<Data<?>> getDatas() {
+    public List<Data> getDatas() {
         return datas;
     }
 }

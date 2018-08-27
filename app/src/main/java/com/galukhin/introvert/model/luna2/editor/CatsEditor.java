@@ -6,17 +6,14 @@ import android.widget.Spinner;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.Cats;
-import com.galukhin.introvert.model.luna2.data.Data;
+import com.galukhin.introvert.model.luna2.data.TextListData;
 
-import java.util.List;
-
-public class CatsEditor extends Editor<String> {
+public class CatsEditor extends Editor {
     private Spinner catSp;
     private Spinner subCatSp;
     private Cats cats;
 
-    public CatsEditor(Activity activity, ViewGroup root, List<Data<
-            String>> data,
+    public CatsEditor(Activity activity, ViewGroup root, TextListData data,
                       Cats cats) {
         super(activity, root, R.layout.cats_editor, data);
         this.cats = cats;

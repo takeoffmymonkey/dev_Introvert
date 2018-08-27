@@ -7,26 +7,25 @@ import android.view.ViewGroup;
 
 import com.galukhin.introvert.model.luna2.data.Data;
 
-import java.util.List;
-
-public abstract class Editor<T> {
+public abstract class Editor {
     Activity activity;
     private ViewGroup root;
     View editor;
-    List<Data<T>> data;
+    Data data;
 
-    Editor(Activity activity, ViewGroup root, int editor, List<Data<T>> data) {
-        this.data = data;
+    Editor(Activity activity, ViewGroup root, int editor,
+           Data data) {
         this.activity = activity;
         this.root = root;
         this.editor = LayoutInflater.from(activity).inflate(editor, root, false);
+        this.data = data;
     }
 
-    public List<Data<T>> getData() {
+    public Data getData() {
         return data;
     }
 
-    public void setData(List<Data<T>> data) {
+    public void setData(Data data) {
         this.data = data;
     }
 

@@ -3,6 +3,8 @@ package com.galukhin.introvert.model.luna2;
 import android.app.Activity;
 import android.widget.ArrayAdapter;
 
+import com.galukhin.introvert.model.luna2.data.TextListData;
+
 import java.util.List;
 
 /**

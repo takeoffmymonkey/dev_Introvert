@@ -11,18 +11,15 @@ import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.data.TextData;
 
-import java.util.List;
-
 /**
  * Presents and edits basic data (i.e. String)
  */
 
-public class TextEditor extends Editor<String> {
+public class TextEditor extends Editor {
     private EditText textEt;
     private TextView nameTv;
 
-
-    public TextEditor(Activity activity, ViewGroup root, List<Data<String>> data,
+    public TextEditor(Activity activity, ViewGroup root, TextData data,
                       String name, boolean numeric) {
         super(activity, root, R.layout.text_editor, data);
 
@@ -33,7 +30,8 @@ public class TextEditor extends Editor<String> {
         else nameTv.setText(name);
 
         this.data = data;
-        textEt.setText(data.get(0).toString());
+
+        textEt.setText(data.toString());
 
         if (numeric) textEt.setInputType(InputType.TYPE_CLASS_NUMBER
                 | InputType.TYPE_NUMBER_FLAG_DECIMAL);
@@ -41,17 +39,14 @@ public class TextEditor extends Editor<String> {
 
 
     @Override
-    public List<Data<String>> getData() {
-        String current = textEt.getText().toString();
-        data.clear();
-        data.add(new TextData(current));
+    public Data getData() {
+        data = new TextData(textEt.getText().toString());
         return data;
     }
 
     @Override
-    public void setData(List<Data<String>> data) {
-        String val = data.get(0).toString();
-        textEt.setText(val);
+    public void setData(Data data) {
+        textEt.setText(data.toString());
         this.data = data;
     }
 }
