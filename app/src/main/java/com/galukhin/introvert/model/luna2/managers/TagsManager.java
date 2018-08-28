@@ -1,29 +1,40 @@
 package com.galukhin.introvert.model.luna2.managers;
 
-import android.app.Activity;
-import android.widget.ArrayAdapter;
+import android.content.ContentValues;
 
-import com.galukhin.introvert.model.luna2.data.TextListData;
+import com.galukhin.introvert.model.luna2.db.DbHelper;
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents available tags for TagsEditor.
  */
 
-public class TagsManager {
-    private List<String> tags;
+public class TagsManager extends Manager {
+    private Set<String> tags;
+    private String table = DbHelper.TAGS_TABLE;
+    private String column = DbHelper.TAGS_TAG_COLUMN;
 
-    public TagsManager(List<String> tags) {
-        this.tags = tags;
+    TagsManager() {
+        tags = (HashSet<String>) dbHelper.getColumnAsCollection(null,
+                table, column, new HashSet<>());
     }
 
-    public TagsManager(String table) {
-        // TODO: 026 26 Aug 18 get list via db
+    public String[] getTags() {
+        return tags.toArray(new String[0]);
     }
 
-    public ArrayAdapter tagsAdapter(Activity activity) {
-        return new ArrayAdapter<>(activity,
-                android.R.layout.simple_dropdown_item_1line, tags);
+    public void addTag(String tag) {
+        if (tags.add(tag)) {
+            ContentValues values = new ContentValues();
+            values.put(column, tag);
+            dbHelper.insertRow(null, table, values);
+            notifyObservers();
+        }
+    }
+
+    public static void cleanUnused() {
+        // TODO: 028 28 Aug 18 remove tags that have no note containing them
     }
 }

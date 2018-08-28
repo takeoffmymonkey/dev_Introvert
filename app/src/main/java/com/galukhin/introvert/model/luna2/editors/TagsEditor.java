@@ -4,18 +4,20 @@ import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.TextListData;
+import com.galukhin.introvert.model.luna2.managers.Observer;
 import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TagsEditor extends Editor {
+public class TagsEditor extends Editor implements Observer {
     private ViewGroup tagsLl;
     private Button addBt;
     private AutoCompleteTextView tagAcTv;
@@ -34,6 +36,11 @@ public class TagsEditor extends Editor {
         addBt = editor.findViewById(R.id.tags_editor_add_bt);
         tagAcTv = editor.findViewById(R.id.tags_editor_tag_actv);
 
+        addBt.setOnClickListener(view -> {
+            addTag(tagAcTv.getText().toString());
+            tagAcTv.setText("");
+        });
+
         prepareAcTv();
         prepareTags(data);
     }
@@ -46,7 +53,7 @@ public class TagsEditor extends Editor {
             addTag(selected);
             tagAcTv.setText("");
         });
-        tagAcTv.setAdapter(tagsManager.tagsAdapter(activity));
+        tagAcTv.setAdapter(createAdapter());
     }
 
     private void prepareTags(TextListData data) {
@@ -68,5 +75,18 @@ public class TagsEditor extends Editor {
         tagTv.setText(selected);
 
         tagsLl.addView(tagsZone);
+
+        tagsManager.addTag(selected);
+    }
+
+    private ArrayAdapter<String> createAdapter() {
+        return new ArrayAdapter<>(activity,
+                android.R.layout.simple_dropdown_item_1line,
+                tagsManager.getTags());
+    }
+
+    @Override
+    public void update() {
+        tagAcTv.setAdapter(createAdapter());
     }
 }

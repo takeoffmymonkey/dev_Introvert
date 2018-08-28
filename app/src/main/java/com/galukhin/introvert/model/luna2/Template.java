@@ -10,6 +10,7 @@ import com.galukhin.introvert.model.luna2.editors.Editor;
 import com.galukhin.introvert.model.luna2.editors.TagsEditor;
 import com.galukhin.introvert.model.luna2.editors.TextEditor;
 import com.galukhin.introvert.model.luna2.managers.CatsManager;
+import com.galukhin.introvert.model.luna2.managers.Manager;
 import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class Template {
     }
 
     private void addTagsEditor() {
-        TagsManager tagsManager = new TagsManager(Arrays.asList("ad", "try", "yyyyy"));
+        TagsManager tagsManager = Manager.getTagsManager();
         Editor editor = new TagsEditor(activity, root, note.tags, tagsManager);
         editors.add(editor);
         root.addView(editor.getEditor());

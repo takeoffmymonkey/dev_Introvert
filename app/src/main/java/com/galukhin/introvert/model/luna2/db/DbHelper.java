@@ -9,6 +9,7 @@ import android.provider.BaseColumns;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     /*TAGS_TABLE*/
     public static final String TAGS_TABLE = "Tags";
-    private static final String TAGS_TAG_COLUMN = "Tag";
+    public static final String TAGS_TAG_COLUMN = "Tag";
     private static final String TAGS_NOTES_COLUMN = "Notes";
 
     /*TYPES_TABLE*/
@@ -40,8 +41,8 @@ public class DbHelper extends SQLiteOpenHelper {
 
     /*CATS_TABLE*/
     public static final String CATS_TABLE = "Cats";
-    private static final String CATS_CAT_COLUMN = "Cat";
-    private static final String CATS_SUBCATS_COLUMN = "Subcats";
+    public static final String CATS_CAT_COLUMN = "Cat";
+    public static final String CATS_SUBCATS_COLUMN = "Subcats";
 
     /*NOTE_ TABLE*/
     public static String NOTE_TABLE_PT1 = "Note_";
@@ -125,20 +126,20 @@ public class DbHelper extends SQLiteOpenHelper {
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + TAGS_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + TAGS_TAG_COLUMN + " TEXT, "
+                                + TAGS_TAG_COLUMN + " TEXT PRIMARY KEY, "
                                 + TAGS_NOTES_COLUMN + " TEXT);";
                 break;
             case TYPES_TABLE:
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + TYPES_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + TYPES_TYPE_COLUMN + " TEXT);";
+                                + TYPES_TYPE_COLUMN + " TEXT PRIMARY KEY);";
                 break;
             case CATS_TABLE:
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + CATS_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + CATS_CAT_COLUMN + " TEXT, "
+                                + CATS_CAT_COLUMN + " TEXT PRIMARY KEY, "
                                 + CATS_SUBCATS_COLUMN + " TEXT);";
                 break;
         }
@@ -245,5 +246,38 @@ public class DbHelper extends SQLiteOpenHelper {
 
         Log.i(TAG, "========================================================");
         c.close();
+    }
+
+
+    public Collection<String> getColumnAsCollection(SQLiteDatabase db, String table,
+                                                    String column, Collection<String> list) {
+        Log.i(TAG, "getColumnAsCollection");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, table)) return null;
+
+        Log.i(TAG, "Getting list from table " + table + " of column " + column);
+
+        Cursor c = db.query(
+                table, new String[]{column}, null, null, null,
+                null, null);
+
+        while (c.moveToNext()) {
+            list.add(c.getString(c.getColumnIndex(column)));
+        }
+
+        return list;
+    }
+
+
+    public long insertRow(SQLiteDatabase db, String table, ContentValues values) {
+        Log.i(TAG, "insertRow");
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, table)) return 0;
+
+        Log.i(TAG, "Inserting new row to table " + table);
+
+        return db.insert(table, null, values);
     }
 }
