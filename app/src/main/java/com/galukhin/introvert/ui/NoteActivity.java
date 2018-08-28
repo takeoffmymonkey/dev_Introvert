@@ -25,7 +25,7 @@ public class NoteActivity extends AppCompatActivity {
 
     Note note;
     Template template;
-    SQLiteDatabase database = MainActivity.dbHelper.getWritableDatabase();
+//    SQLiteDatabase database = MainActivity.dbHelper.getWritableDatabase();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +76,7 @@ public class NoteActivity extends AppCompatActivity {
 
     @Override
     public void finish() {
-        database.close();
+//        database.close();
         super.finish();
     }
 

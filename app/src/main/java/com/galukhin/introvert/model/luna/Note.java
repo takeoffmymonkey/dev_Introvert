@@ -38,7 +38,7 @@ public class Note {
      */
     public Note(long id, Context context) {
         this.id = id;
-        fields = Fields.getFieldsById(id, context);
+//        fields = Fields.getFieldsById(id, context);
         exists = true;
     }
 
@@ -56,9 +56,9 @@ public class Note {
         return exists;
     }
 
-    public static boolean isExisting(int id) {
-        return MainActivity.dbHelper.isExisting(null, DbHelper.NOTE_TABLE_PT1 + id);
-    }
+//    public static boolean isExisting(int id) {
+//        return MainActivity.dbHelper.isExisting(null, DbHelper.NOTE_TABLE_PT1 + id);
+//    }
 
     public void addField(Field field) {
         fields.add(field);
@@ -79,7 +79,7 @@ public class Note {
         prepareValues();
 
         Log.i(TAG, "Saving to note to db");
-        MainActivity.dbHelper.addNote(null, this);
+//        MainActivity.dbHelper.addNote(null, this);
         // TODO: 007 07 Aug 18 addToRange updating functionality
     }
 

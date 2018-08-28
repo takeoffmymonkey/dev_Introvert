@@ -45,7 +45,7 @@ public class Fields {
         return fields;
     }
 
-    public static List<Field> getFieldsById(long noteId, Context context) {
-        return MainActivity.dbHelper.getNoteFields(null, noteId, context);
-    }
+//    public static List<Field> getFieldsById(long noteId, Context context) {
+//        return MainActivity.dbHelper.getNoteFields(null, noteId, context);
+//    }
 }
