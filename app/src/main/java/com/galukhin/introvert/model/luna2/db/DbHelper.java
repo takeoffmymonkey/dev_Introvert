@@ -10,9 +10,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
     private static String TAG = "LUNA:" + "DbHelper2";
@@ -42,7 +40,10 @@ public class DbHelper extends SQLiteOpenHelper {
     /*CATS_TABLE*/
     public static final String CATS_TABLE = "Cats";
     public static final String CATS_CAT_COLUMN = "Cat";
-    public static final String CATS_SUBCATS_COLUMN = "Subcats";
+
+    /*SUBCATS_TABLE*/
+    public static final String SUBCATS_TABLE_PT1 = "Subcats_";
+    public static final String SUBCATS_SUBCAT_COLUMN = "Subcat";
 
     /*NOTE_ TABLE*/
     public static String NOTE_TABLE_PT1 = "Note_";
@@ -58,10 +59,11 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "OnCreate");
-        createTable(db, NOTES_TABLE);
-        createTable(db, TAGS_TABLE);
-        createTable(db, TYPES_TABLE);
-        createTable(db, CATS_TABLE);
+        createTable(db, NOTES_TABLE, 0);
+        createTable(db, TAGS_TABLE, 0);
+        createTable(db, TYPES_TABLE, 0);
+        createTable(db, CATS_TABLE, 0);
+        createTable(db, SUBCATS_TABLE_PT1, 1);
 
         initContent(db, NOTES_TABLE);
         initContent(db, TAGS_TABLE);
@@ -76,7 +78,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    private void createTable(SQLiteDatabase db, String table) {
+    private void createTable(SQLiteDatabase db, String table, int index) {
         Log.i(TAG, "createTable");
 
         if (db == null) db = getWritableDatabase();
@@ -84,7 +86,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
         Log.i(TAG, "Creating " + table + "table");
 
-        String SQL_CREATE_TABLE = createTableCommand(table);
+        String SQL_CREATE_TABLE = createTableCommand(table, index);
 
         db.execSQL(SQL_CREATE_TABLE);
     }
@@ -107,7 +109,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     /* ~~~~~~~ UTILITY METHODS ~~~~~~~ */
-    private String createTableCommand(String table) {
+    private String createTableCommand(String table, int index) {
         Log.i(TAG, "createTableCommand");
         String SQL_CREATE_TABLE = null;
 
@@ -126,21 +128,26 @@ public class DbHelper extends SQLiteOpenHelper {
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + TAGS_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + TAGS_TAG_COLUMN + " TEXT PRIMARY KEY, "
+                                + TAGS_TAG_COLUMN + " TEXT UNIQUE, "
                                 + TAGS_NOTES_COLUMN + " TEXT);";
                 break;
             case TYPES_TABLE:
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + TYPES_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + TYPES_TYPE_COLUMN + " TEXT PRIMARY KEY);";
+                                + TYPES_TYPE_COLUMN + " TEXT UNIQUE);";
                 break;
             case CATS_TABLE:
                 SQL_CREATE_TABLE =
                         "CREATE TABLE " + CATS_TABLE + " ("
                                 + ID_COLUMN + " INTEGER PRIMARY KEY, "
-                                + CATS_CAT_COLUMN + " TEXT PRIMARY KEY, "
-                                + CATS_SUBCATS_COLUMN + " TEXT);";
+                                + CATS_CAT_COLUMN + " TEXT UNIQUE);";
+                break;
+            case SUBCATS_TABLE_PT1:
+                SQL_CREATE_TABLE =
+                        "CREATE TABLE " + SUBCATS_TABLE_PT1 + index + " ("
+                                + ID_COLUMN + " INTEGER PRIMARY KEY, "
+                                + SUBCATS_SUBCAT_COLUMN + " TEXT UNIQUE);";
                 break;
         }
 
@@ -178,14 +185,10 @@ public class DbHelper extends SQLiteOpenHelper {
                 }
                 break;
             case CATS_TABLE:
-                Map<String, String> map = new HashMap<>();
-                map.put("Шутки", "Туалетные, Черные");
-                map.put("Дневник", "");
-                map.put("Покупки", "Продукты, Одежда, Лекарства");
-                for (String s : map.keySet()) {
+                String[] cats = {"General", "Jokes", "Diary", "Tracks"};
+                for (String cat : cats) {
                     ContentValues v = new ContentValues();
-                    v.put(CATS_CAT_COLUMN, s);
-                    v.put(CATS_SUBCATS_COLUMN, map.get(s));
+                    v.put(CATS_CAT_COLUMN, cat);
                     values.add(v);
                 }
                 break;
@@ -279,5 +282,37 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.i(TAG, "Inserting new row to table " + table);
 
         return db.insert(table, null, values);
+    }
+
+
+    private String subCatsTableName(int index) {
+        return SUBCATS_TABLE_PT1 + index;
+    }
+
+
+    public String subCatsTableByCat(SQLiteDatabase db, String cat) {
+        Log.i(TAG, "subCatsTableByCat");
+
+        if (cat == null) return subCatsTableName(1);
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, CATS_TABLE)) return null;
+
+        Log.i(TAG, "Searching for the category " + cat);
+
+        Cursor c = db.query(
+                CATS_TABLE,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                CATS_CAT_COLUMN + "=?",              // The columns for the WHERE clause
+                new String[]{cat},          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+
+        if (c != null && c.getCount() > 0) {
+            c.moveToFirst();
+            return subCatsTableName(c.getInt(c.getColumnIndex(ID_COLUMN)));
+        } else return null;
     }
 }

@@ -1,37 +1,48 @@
 package com.galukhin.introvert.model.luna2.managers;
 
-import android.app.Activity;
-import android.widget.ArrayAdapter;
+import android.content.ContentValues;
 
-import java.util.List;
+import com.galukhin.introvert.model.luna2.db.DbHelper;
+
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
- * Represents available categories for CatsEditor.
+ * Represents available categories and their subcategories for CatsEditor.
  */
 
-public class CatsManager {
-    private List<String> cats;
-    private List<String> subCats;
+public class CatsManager extends Manager {
+    private Set<String> cats;
+    private Set<String> subCats;
+    private String catsTable = DbHelper.CATS_TABLE;
+    private String catsColumn = DbHelper.CATS_CAT_COLUMN;
+    private String subCatsTable = dbHelper.subCatsTableByCat(null, null);
+    private String subCatsColumn = DbHelper.SUBCATS_SUBCAT_COLUMN;
 
-    public CatsManager(List<String> cats, List<String> subCats) {
-        this.cats = cats;
-        this.subCats = subCats;
+    public CatsManager() {
+        cats = (HashSet<String>) dbHelper.getColumnAsCollection(
+                null, catsTable, catsColumn, new LinkedHashSet<>());
+
+        subCats = (HashSet<String>) dbHelper.getColumnAsCollection(
+                null, subCatsTable, subCatsColumn, new LinkedHashSet <>());
     }
 
-    public CatsManager(String table) {
-        // TODO: 026 26 Aug 18 get lists via db
+
+    public void addCat(String tag) {
+        if (cats.add(tag)) {
+            ContentValues values = new ContentValues();
+            values.put(catsColumn, tag);
+            dbHelper.insertRow(null, catsTable, values);
+            notifyObservers();
+        }
     }
 
-    private ArrayAdapter adapter(Activity activity, List<String> list) {
-        return new ArrayAdapter<>(activity,
-                android.R.layout.simple_dropdown_item_1line, list);
+    public String[] getCats() {
+        return cats.toArray(new String[0]);
     }
 
-    public ArrayAdapter catAdapter(Activity activity) {
-        return adapter(activity, cats);
-    }
-
-    public ArrayAdapter subCatAdapter(Activity activity) {
-        return adapter(activity, subCats);
+    public String[] getSubCags() {
+        return subCats.toArray(new String[0]);
     }
 }

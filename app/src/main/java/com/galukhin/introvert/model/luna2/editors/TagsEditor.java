@@ -31,6 +31,7 @@ public class TagsEditor extends Editor implements Observer {
                       TextListData data, TagsManager tagsManager) {
         super(activity, root, R.layout.tags_editor, data);
         this.tagsManager = tagsManager;
+        tagsManager.addObserver(this);
 
         tagsLl = editor.findViewById(R.id.tags_editor_tags_ll_vert);
         addBt = editor.findViewById(R.id.tags_editor_add_bt);
@@ -53,8 +54,9 @@ public class TagsEditor extends Editor implements Observer {
             addTag(selected);
             tagAcTv.setText("");
         });
-        tagAcTv.setAdapter(createAdapter());
+        tagAcTv.setAdapter(adapter());
     }
+
 
     private void prepareTags(TextListData data) {
         List<String> list = data.getData();
@@ -62,6 +64,7 @@ public class TagsEditor extends Editor implements Observer {
             addTag(s);
         }
     }
+
 
     private void addTag(String selected) {
         View tagsZone = LayoutInflater.from(activity).inflate
@@ -79,14 +82,16 @@ public class TagsEditor extends Editor implements Observer {
         tagsManager.addTag(selected);
     }
 
-    private ArrayAdapter<String> createAdapter() {
+
+    private ArrayAdapter<String> adapter() {
         return new ArrayAdapter<>(activity,
                 android.R.layout.simple_dropdown_item_1line,
                 tagsManager.getTags());
     }
 
+
     @Override
     public void update() {
-        tagAcTv.setAdapter(createAdapter());
+        tagAcTv.setAdapter(adapter());
     }
 }

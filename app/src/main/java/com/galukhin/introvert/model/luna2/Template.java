@@ -43,10 +43,8 @@ public class Template {
     }
 
     private void addCatsEditor() {
-        List<String> cats = Arrays.asList("1", "2", "3");
-        List<String> subCats = Arrays.asList("11", "22", "33");
-        CatsManager catz = new CatsManager(cats, subCats);
-        Editor editor = new CatsEditor(activity, root, note.cats, catz);
+        CatsManager cats = Manager.getCatsManager();
+        Editor editor = new CatsEditor(activity, root, note.cats, cats);
         editors.add(editor);
         root.addView(editor.getEditor());
     }

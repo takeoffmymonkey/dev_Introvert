@@ -19,6 +19,10 @@ public abstract class Manager implements Observable {
         return tagsManager;
     }
 
+    public static CatsManager getCatsManager() {
+        if (catsManager == null) catsManager = new CatsManager();
+        return catsManager;
+    }
 
     @Override
     public void addObserver(Observer observer) {
