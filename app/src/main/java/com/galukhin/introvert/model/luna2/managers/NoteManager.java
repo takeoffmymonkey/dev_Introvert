@@ -1,20 +1,18 @@
-package com.galukhin.introvert.model.luna2;
+package com.galukhin.introvert.model.luna2.managers;
 
 import android.app.Activity;
 import android.view.ViewGroup;
 
+import com.galukhin.introvert.model.luna2.Note;
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.data.TextData;
+import com.galukhin.introvert.model.luna2.db.DbHelper;
 import com.galukhin.introvert.model.luna2.editors.CatsEditor;
 import com.galukhin.introvert.model.luna2.editors.Editor;
 import com.galukhin.introvert.model.luna2.editors.TagsEditor;
 import com.galukhin.introvert.model.luna2.editors.TextEditor;
-import com.galukhin.introvert.model.luna2.managers.CatsManager;
-import com.galukhin.introvert.model.luna2.managers.Manager;
-import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,45 +24,62 @@ import java.util.List;
  * An edited template can be saved for further usages.
  */
 
-public class Template {
+
+public class NoteManager {
     private Activity activity;
     private ViewGroup root;
     private Note note;
+    Editor catsEditor;
+    Editor tagsEditor;
+    List<Editor> dataEditors = new ArrayList<>();
 
-    List<Editor> editors = new ArrayList<>();
-
-    public Template(Activity activity, ViewGroup root, Note note) {
+    public NoteManager(Activity activity, ViewGroup root, int note, boolean template) {
         this.activity = activity;
         this.root = root;
-        this.note = note;
+
+        createNote(note, template);
 
         addCatsEditor();
         addTagsEditor();
+        tagsEditor.hide();
     }
+
+
+    private void createNote(int id, boolean isTemplate) {
+        String mainTable;
+        String subTable;
+
+        if (isTemplate) {
+            mainTable = DbHelper.TEMPLATES_TABLE;
+            subTable = DbHelper.templateTableNameById(id);
+        } else {
+            mainTable = DbHelper.NOTES_TABLE;
+            subTable = DbHelper.noteTableNameById(id);
+        }
+
+    }
+
 
     private void addCatsEditor() {
         CatsManager cats = Manager.getCatsManager();
-        Editor editor = new CatsEditor(activity, root, note.cats, cats);
-        editors.add(editor);
-        root.addView(editor.getEditor());
+        catsEditor = new CatsEditor(activity, root, note.getCat(), cats);
+        root.addView(catsEditor.getEditor());
     }
+
 
     private void addTagsEditor() {
         TagsManager tagsManager = Manager.getTagsManager();
-        Editor editor = new TagsEditor(activity, root, note.tags, tagsManager);
-        editors.add(editor);
-        root.addView(editor.getEditor());
+        tagsEditor = new TagsEditor(activity, root, note.getTags(), tagsManager);
+        root.addView(tagsEditor.getEditor());
     }
 
-    public void add(Data data) {
-        addEditor(data);
-    }
 
     private void addEditor(Data data) {
         Editor editor = createEditor(data);
-        editors.add(editor);
+        dataEditors.add(editor);
         root.addView(editor.getEditor());
     }
+
 
     private Editor createEditor(Data data) {
         Editor editor = null;

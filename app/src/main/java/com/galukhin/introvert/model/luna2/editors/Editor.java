@@ -12,6 +12,7 @@ public abstract class Editor {
     private ViewGroup root;
     View editor;
     Data data;
+    boolean invisible;
 
     Editor(Activity activity, ViewGroup root, int editor,
            Data data) {
@@ -33,7 +34,17 @@ public abstract class Editor {
         return editor;
     }
 
-    public void disable() {
-        editor.setVisibility(View.GONE);
+    public void hide() {
+        if (!invisible) {
+            editor.setVisibility(View.INVISIBLE);
+            invisible = true;
+        }
+    }
+
+    public void show() {
+        if (invisible) {
+            editor.setVisibility(View.VISIBLE);
+            invisible = false;
+        }
     }
 }

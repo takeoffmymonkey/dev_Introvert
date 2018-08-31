@@ -116,7 +116,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void addNote(SQLiteDatabase db, Note note) {
-        Log.i(TAG, "addNote");
+        Log.i(TAG, "addNoteToMainTable");
 
         if (db == null) db = getWritableDatabase();
         int id = notesCount(db) + 1;

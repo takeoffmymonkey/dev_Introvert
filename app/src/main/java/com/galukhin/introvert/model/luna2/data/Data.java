@@ -24,4 +24,43 @@ public abstract class Data<T> {
     public String toString() {
         return data.toString();
     }
+
+    public static String dataTypeById(int id) {
+        switch (id) {
+            case 0:
+            default:
+                return "Data";
+            case 1:
+                return "TextData";
+            case 2:
+                return "TextListData";
+        }
+
+    }
+
+    public static int idByDataType(String dataType, Data data) {
+        int id = 0;
+        if (dataType != null) {
+            switch (dataType) {
+                case "Data":
+                default:
+                    id = 0;
+                    break;
+                case "TextData":
+                    id = 1;
+                    break;
+                case "TextListData":
+                    id = 2;
+                    break;
+            }
+        }
+
+        if (data != null) {
+            if (data instanceof TextListData) id = 2;
+            else if (data instanceof TextData) id = 1;
+            else id = 0;
+        }
+
+        return id;
+    }
 }

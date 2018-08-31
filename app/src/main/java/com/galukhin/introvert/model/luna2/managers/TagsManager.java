@@ -17,7 +17,7 @@ public class TagsManager extends Manager {
     private String column = DbHelper.TAGS_TAG_COLUMN;
 
     TagsManager() {
-        tags = (HashSet<String>) dbHelper.getColumnAsCollection(
+        tags = (HashSet<String>) dbHelper.getColumnAsStringCollection(
                 null, table, column, new HashSet<>());
     }
 

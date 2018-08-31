@@ -8,18 +8,14 @@ public class MyApplication extends Application {
 
     private static Context context;
 
-//    DbHelper dbHelper;
-    com.galukhin.introvert.model.luna2.db.DbHelper dbHelper2;
-//    private static SQLiteDatabase db;
-    private static SQLiteDatabase db2;
+    com.galukhin.introvert.model.luna2.db.DbHelper dbHelper;
+    private static SQLiteDatabase db;
 
     public void onCreate() {
         super.onCreate();
         MyApplication.context = getApplicationContext();
-//        dbHelper = new DbHelper(this);
-        dbHelper2 = new com.galukhin.introvert.model.luna2.db.DbHelper(this);
-//        db = dbHelper.getReadableDatabase();
-        db2 = dbHelper2.getReadableDatabase();
+        dbHelper = new com.galukhin.introvert.model.luna2.db.DbHelper(this);
+        db = dbHelper.getReadableDatabase();
     }
 
     public static Context getAppContext() {
@@ -27,6 +23,6 @@ public class MyApplication extends Application {
     }
 
     public static SQLiteDatabase getDB() {
-        return MyApplication.db2;
+        return MyApplication.db;
     }
 }

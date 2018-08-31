@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.Note;
-import com.galukhin.introvert.model.luna2.Template;
 import com.galukhin.introvert.model.luna2.data.TextData;
 
 public class TestActivity extends AppCompatActivity {

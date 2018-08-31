@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.TextListData;
-import com.galukhin.introvert.model.luna2.managers.Observer;
+import com.galukhin.introvert.model.luna2.managers.interfaces.Observer;
 import com.galukhin.introvert.model.luna2.managers.TagsManager;
 
 import java.util.ArrayList;

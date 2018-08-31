@@ -8,7 +8,7 @@ import android.widget.Spinner;
 import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.TextListData;
 import com.galukhin.introvert.model.luna2.managers.CatsManager;
-import com.galukhin.introvert.model.luna2.managers.Observer;
+import com.galukhin.introvert.model.luna2.managers.interfaces.Observer;
 
 public class CatsEditor extends Editor implements Observer {
     private Spinner catSp;

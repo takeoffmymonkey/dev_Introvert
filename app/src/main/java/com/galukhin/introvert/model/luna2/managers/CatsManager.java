@@ -17,14 +17,14 @@ public class CatsManager extends Manager {
     private Set<String> subCats;
     private String catsTable = DbHelper.CATS_TABLE;
     private String catsColumn = DbHelper.CATS_CAT_COLUMN;
-    private String subCatsTable = dbHelper.subCatsTableByCat(null, null);
+    private String subCatsTable = dbHelper.subCatsTableNameByCat(null, null);
     private String subCatsColumn = DbHelper.SUBCATS_SUBCAT_COLUMN;
 
     public CatsManager() {
-        cats = (HashSet<String>) dbHelper.getColumnAsCollection(
+        cats = (HashSet<String>) dbHelper.getColumnAsStringCollection(
                 null, catsTable, catsColumn, new LinkedHashSet<>());
 
-        subCats = (HashSet<String>) dbHelper.getColumnAsCollection(
+        subCats = (HashSet<String>) dbHelper.getColumnAsStringCollection(
                 null, subCatsTable, subCatsColumn, new LinkedHashSet <>());
     }
 

@@ -1,50 +1,75 @@
 package com.galukhin.introvert.model.luna2;
 
 import com.galukhin.introvert.model.luna2.data.Data;
-import com.galukhin.introvert.model.luna2.data.TextData;
-import com.galukhin.introvert.model.luna2.data.TextListData;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Note {
-    TextListData cats;
+    private String name = null;
+    private long created;
+    private long edited;
+    private long cat;
+    private long subCat;
+    private List<Data> datas = new ArrayList<>();
 
-    {
-        List<String> c = new ArrayList<>();
-        c.add("2");
-        c.add("22");
-        cats = new TextListData(c);
+    public Note() {
     }
 
-    TextListData tags;
-
-    {
-        List<String> t = new ArrayList<>();
-        t.add("gbgfggb");
-        t.add("gbsdfsdfggb");
-        t.add("gbgwewwqwwqwdfggb");
-        tags = new TextListData(t);
+    public Note(String name, long created, long edited, long cat, long subCat, List<Data> datas) {
+        this.name = name;
+        this.created = created;
+        this.edited = edited;
+        this.cat = cat;
+        this.subCat = subCat;
+        this.datas = datas;
     }
 
-    List<Data> datas = new ArrayList<>();
-
-    {
-        datas.add(new TextData("4435"));
-        datas.add(new TextData("25"));
-        datas.add(new TextData("gbgf253235ggb"));
-        datas.add(new TextData("235"));
+    public String getName() {
+        return name;
     }
 
-    public TextListData getCats() {
-        return cats;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public TextListData getTags() {
-        return tags;
+    public long getCreated() {
+        return created;
+    }
+
+    public void setCreated(long created) {
+        this.created = created;
+    }
+
+    public long getEdited() {
+        return edited;
+    }
+
+    public void setEdited(long edited) {
+        this.edited = edited;
+    }
+
+    public long getCat() {
+        return cat;
+    }
+
+    public void setCat(long cat) {
+        this.cat = cat;
+    }
+
+    public long getSubCat() {
+        return subCat;
+    }
+
+    public void setSubCat(long subCat) {
+        this.subCat = subCat;
     }
 
     public List<Data> getDatas() {
         return datas;
+    }
+
+    public void setDatas(List<Data> datas) {
+        this.datas = datas;
     }
 }

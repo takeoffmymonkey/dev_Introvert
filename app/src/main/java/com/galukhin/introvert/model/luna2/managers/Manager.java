@@ -1,6 +1,8 @@
 package com.galukhin.introvert.model.luna2.managers;
 
 import com.galukhin.introvert.model.luna2.db.DbHelper;
+import com.galukhin.introvert.model.luna2.managers.interfaces.Observable;
+import com.galukhin.introvert.model.luna2.managers.interfaces.Observer;
 import com.galukhin.introvert.ui.MainActivity;
 
 import java.util.ArrayList;

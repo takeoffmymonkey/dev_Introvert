@@ -8,25 +8,37 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
 import android.util.Log;
 
+import com.galukhin.introvert.model.luna2.Note;
+import com.galukhin.introvert.model.luna2.data.Data;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
+    // TODO: 031 31 Aug 18 check cursors closure
+
+    private SQLiteDatabase db;
+
     private static String TAG = "LUNA:" + "DbHelper2";
+
     private static final String ID_COLUMN = BaseColumns._ID;
 
     /*DATABASE*/
     private static final String DATABASE_NAME = "luna";
     private static final int DATABASE_VERSION = 1;
 
-    /*NOTES_TABLE*/
+    /*NOTES/TEMPLATES TABLES*/
     public static final String NOTES_TABLE = "Notes";
+    public static final String TEMPLATES_TABLE = "Templates";
     private static final String NOTES_NAME_COLUMN = "Name";
     private static final String NOTES_CREATED_COLUMN = "Created";
     private static final String NOTES_EDITED_COLUMN = "Edited";
     private static final String NOTES_CAT_COLUMN = "Cat";
     private static final String NOTES_SUBCAT_COLUMN = "Subcat";
+    private static final String NOTES_TAGS_COLUMN = "Tags";
 
     /*TAGS_TABLE*/
     public static final String TAGS_TABLE = "Tags";
@@ -45,11 +57,11 @@ public class DbHelper extends SQLiteOpenHelper {
     public static final String SUBCATS_TABLE_PT1 = "Subcats_";
     public static final String SUBCATS_SUBCAT_COLUMN = "Subcat";
 
-    /*NOTE_ TABLE*/
+    /*NOTE_/TEMPLATE_ TABLE*/
     public static String NOTE_TABLE_PT1 = "Note_";
+    public static String TEMPLATE_TABLE_PT1 = "Template_";
     private static final String NOTE_TYPE_COLUMN = "Type";
     private static final String NOTE_VALUE_COLUMN = "Value";
-
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -59,16 +71,17 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         Log.i(TAG, "OnCreate");
-        createTable(db, NOTES_TABLE, 0);
-        createTable(db, TAGS_TABLE, 0);
-        createTable(db, TYPES_TABLE, 0);
-        createTable(db, CATS_TABLE, 0);
-        createTable(db, SUBCATS_TABLE_PT1, 1);
+        createTable(NOTES_TABLE);
+        createTable(TEMPLATES_TABLE);
+        createTable(TAGS_TABLE);
+        createTable(TYPES_TABLE);
+        createTable(CATS_TABLE);
+        createTable(SUBCATS_TABLE_PT1, 1);
 
-        initContent(db, NOTES_TABLE);
-        initContent(db, TAGS_TABLE);
-        initContent(db, TYPES_TABLE);
-        initContent(db, CATS_TABLE);
+        initContent(NOTES_TABLE);
+        initContent(TAGS_TABLE);
+        initContent(TYPES_TABLE);
+        initContent(CATS_TABLE);
     }
 
 
@@ -77,38 +90,20 @@ public class DbHelper extends SQLiteOpenHelper {
 
     }
 
+    private void createTable(String table) {
+        createTable(table, 0);
+    }
 
-    private void createTable(SQLiteDatabase db, String table, int index) {
+
+    private void createTable(String table, int index) {
         Log.i(TAG, "createTable");
-
-        if (db == null) db = getWritableDatabase();
-        if (isExisting(db, table)) return;
-
-        Log.i(TAG, "Creating " + table + "table");
+        if (!ensureReadiness(table, false)) return;
 
         String SQL_CREATE_TABLE = createTableCommand(table, index);
-
         db.execSQL(SQL_CREATE_TABLE);
     }
 
 
-    private void initContent(SQLiteDatabase db, String table) {
-        Log.i(TAG, "initContent");
-
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, table)) return;
-
-        Log.i(TAG, "Initializing " + table + "table's content");
-
-        List<ContentValues> values = getInitValues(table);
-
-        for (ContentValues value : values) {
-            db.insert(table, null, value);
-        }
-    }
-
-
-    /* ~~~~~~~ UTILITY METHODS ~~~~~~~ */
     private String createTableCommand(String table, int index) {
         Log.i(TAG, "createTableCommand");
         String SQL_CREATE_TABLE = null;
@@ -122,7 +117,19 @@ public class DbHelper extends SQLiteOpenHelper {
                                 + NOTES_CREATED_COLUMN + " INTEGER, "
                                 + NOTES_EDITED_COLUMN + " INTEGER, "
                                 + NOTES_CAT_COLUMN + " INTEGER, "
-                                + NOTES_SUBCAT_COLUMN + " INTEGER);";
+                                + NOTES_SUBCAT_COLUMN + " INTEGER, "
+                                + NOTES_TAGS_COLUMN + " TEXT);";
+                break;
+            case TEMPLATES_TABLE:
+                SQL_CREATE_TABLE =
+                        "CREATE TABLE " + TEMPLATES_TABLE + " ("
+                                + ID_COLUMN + " INTEGER PRIMARY KEY, "
+                                + NOTES_NAME_COLUMN + " TEXT, "
+                                + NOTES_CREATED_COLUMN + " INTEGER, "
+                                + NOTES_EDITED_COLUMN + " INTEGER, "
+                                + NOTES_CAT_COLUMN + " INTEGER, "
+                                + NOTES_SUBCAT_COLUMN + " INTEGER, "
+                                + NOTES_TAGS_COLUMN + " TEXT);";
                 break;
             case TAGS_TABLE:
                 SQL_CREATE_TABLE =
@@ -155,6 +162,14 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    private void initContent(String table) {
+        Log.i(TAG, "initContent");
+        if (!ensureReadiness(table, true)) return;
+
+        insertRows(table, getInitValues(table));
+    }
+
+
     private List<ContentValues> getInitValues(String table) {
         List<ContentValues> values = new ArrayList<>();
 
@@ -165,8 +180,17 @@ public class DbHelper extends SQLiteOpenHelper {
                 value.put(NOTES_CREATED_COLUMN, "1111111111");
                 value.put(NOTES_EDITED_COLUMN, "2222222222");
                 value.put(NOTES_CAT_COLUMN, "1");
-                value.put(NOTES_SUBCAT_COLUMN, "11");
+                value.put(NOTES_SUBCAT_COLUMN, "1");
                 values.add(value);
+                break;
+            case TEMPLATES_TABLE:
+                ContentValues val = new ContentValues();
+                val.put(NOTES_NAME_COLUMN, "Записка1");
+                val.put(NOTES_CREATED_COLUMN, "33333333333");
+                val.put(NOTES_EDITED_COLUMN, "44444444444");
+                val.put(NOTES_CAT_COLUMN, "2");
+                val.put(NOTES_SUBCAT_COLUMN, "2");
+                values.add(val);
                 break;
             case TAGS_TABLE:
                 String[] tags = {"Хуита", "Норм", "Заебок"};
@@ -197,103 +221,159 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    private boolean isExisting(SQLiteDatabase db, String table) {
-        Log.i(TAG, "isExisting");
-        Log.i(TAG, "Checking " + table + " table existence");
+    /* ~~~~~~~~~~~~~~~~~~~~~ UTILITY METHODS ~~~~~~~~~~~~~~~~~~~~~ */
+    /* ~~~~~~~CHECKER METHODS~~~~~~~ */
+    private boolean ensureDbReadiness() { //
+        return ensureReadiness(null, false);
+    }
 
+
+    /**
+     * Ensures that db is ready, and specified table satisfies specified existence
+     * condition
+     */
+    private boolean ensureReadiness(String table, boolean mustExist) {
+        Log.i(TAG, "ensureReadiness");
         if (db == null) db = getWritableDatabase();
 
-        Cursor cursor = db.rawQuery("select DISTINCT tbl_name " +
-                        "from sqlite_master where tbl_name = '" + table + "'",
-                null);
-        if (cursor != null) {
-            if (cursor.getCount() > 0) {
-                cursor.close();
-                Log.i(TAG, "Table exists");
-                return true;
-            }
-            cursor.close();
+        if (table != null) {
+            if (mustExist) {
+                return isExisting(table);
+            } else return !isExisting(table);
         }
-        Log.i(TAG, "Table doesn't exists");
+
+        return true;
+    }
+
+
+    private boolean isExisting(String table) {
+        Log.i(TAG, "isExisting");
+        ensureDbReadiness();
+
+        try (Cursor cursor = db.rawQuery("select DISTINCT tbl_name " +
+                "from sqlite_master where tbl_name = '" + table + "'", null)) {
+            if (cursor != null) {
+                if (cursor.getCount() > 0) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
 
-    public void dumpTable(SQLiteDatabase db, String table) {
+    public void dumpTable(String table) {
         Log.i(TAG, "dumpTable");
+        if (!ensureReadiness(table, true)) return;
 
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, table)) return;
+        try (Cursor c = db.query(table, null, null, null,
+                null, null, null)) {
+            String[] columns = c.getColumnNames();
 
-        Log.i(TAG, "Performing " + table + " table dump");
+            Log.i(TAG, "========================================================");
+            Log.i(TAG, table + " table");
+            Log.i(TAG, "Number of rows: " + c.getCount());
+            Log.i(TAG, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
-        Cursor c = db.query(
-                table, null, null, null,
-                null, null, null);
-        String[] columns = c.getColumnNames();
-        Log.i(TAG, "========================================================");
-        Log.i(TAG, table + " table");
-        Log.i(TAG, "Number of rows: " + c.getCount());
-        Log.i(TAG, "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-
-        c.moveToFirst();
-        for (int i = 0; i < c.getCount(); i++) { // Moving through rows
-
-            for (String column : columns) { // Moving through columns
-                Log.i(TAG, column + ": " + c.getString(c.getColumnIndex(column)));
+            c.moveToFirst();
+            for (int i = 0; i < c.getCount(); i++) { // Moving through rows
+                for (String column : columns) { // Moving through columns
+                    Log.i(TAG, column + ": " + c.getString(c.getColumnIndex(column)));
+                }
+                Log.i(TAG, "---------------------------------");
+                c.moveToNext();
             }
 
-            Log.i(TAG, "---------------------------------");
-            c.moveToNext();
+            Log.i(TAG, "========================================================");
         }
-
-        Log.i(TAG, "========================================================");
-        c.close();
     }
 
 
-    public Collection<String> getColumnAsCollection(SQLiteDatabase db, String table,
-                                                    String column, Collection<String> list) {
-        Log.i(TAG, "getColumnAsCollection");
+    /* ~~~~~~~INSERT METHODS~~~~~~~ */
+    public boolean insertRow(String table, ContentValues values) {
+        List<ContentValues> contentValues = new ArrayList<>();
+        contentValues.add(values);
+        return insertRows(table, contentValues);
+    }
 
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, table)) return null;
 
-        Log.i(TAG, "Getting list from table " + table + " of column " + column);
+    public boolean insertRows(String table, List<ContentValues> values) {
+        Log.i(TAG, "insertRows");
+        if (!ensureReadiness(table, true)) return false;
 
-        Cursor c = db.query(
+        db.beginTransaction();
+        try {
+            for (ContentValues value : values) {
+                db.insert(table, null, value);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return true;
+    }
+
+
+    /* ~~~~~~~READ METHODS~~~~~~~ */
+    public Collection<String> getColumnAsStringCollection(String table, String column,
+                                                          Collection<String> list) {
+        Log.i(TAG, "getColumnAsStringCollection");
+        if (!ensureReadiness(table, true)) return null;
+
+        try (Cursor c = db.query(
                 table, new String[]{column}, null, null, null,
-                null, null);
-
-        while (c.moveToNext()) {
-            list.add(c.getString(c.getColumnIndex(column)));
+                null, null)) {
+            if (c.getCount() > 0) {
+                while (c.moveToNext()) {
+                    list.add(c.getString(c.getColumnIndex(column)));
+                }
+            }
         }
 
         return list;
     }
 
 
-    public long insertRow(SQLiteDatabase db, String table, ContentValues values) {
-        Log.i(TAG, "insertRow");
+    public Map<String, String> getRowAsStringMap(String table, long row, String[] columns) {
+        Log.i(TAG, "getRowAsStringMap");
+        if (!ensureReadiness(table, true)) return null;
 
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, table)) return 0;
+        Map<String, String> map = new HashMap<>();
+        try (Cursor c = db.query(table, columns,
+                ID_COLUMN + "=?", new String[]{Long.toString(row)},
+                null, null, null)) {
+            if (c.getCount() == 1) {
+                c.moveToNext();
+                for (String s : columns) {
+                    map.put(s, c.getString(c.getColumnIndex(s)));
+                }
+            }
+        }
 
-        Log.i(TAG, "Inserting new row to table " + table);
-
-        return db.insert(table, null, values);
+        return map;
     }
 
 
-    private String subCatsTableName(int index) {
-        return SUBCATS_TABLE_PT1 + index;
+    /* ~~~~~~~ CATS/SUBCATS METHODS~~~~~~~ */
+    private String subCatsTableNameById(int id) {
+        return SUBCATS_TABLE_PT1 + id;
     }
 
 
-    public String subCatsTableByCat(SQLiteDatabase db, String cat) {
-        Log.i(TAG, "subCatsTableByCat");
+    public String[] getSubCats() {
+    }
 
-        if (cat == null) return subCatsTableName(1);
+    public String subCatsTableNameByCat(long id) {
+
+    }
+
+    public String
+
+    public String subCatsTableNameByCat(String cat) {
+        Log.i(TAG, "subCatsTableNameByCat");
+
+        if (cat == null) return subCatsTableNameById(1);
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, CATS_TABLE)) return null;
@@ -312,7 +392,147 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
-            return subCatsTableName(c.getInt(c.getColumnIndex(ID_COLUMN)));
+            return subCatsTableNameById(c.getInt(c.getColumnIndex(ID_COLUMN)));
         } else return null;
     }
+
+
+    /* ~~~~~~~ NOTE/TEMPLATE METHODS~~~~~~~ */
+    public static String templateTableNameById(long id) {
+        return TEMPLATE_TABLE_PT1 + id;
+    }
+
+
+    public static String noteTableNameById(long id) {
+        return NOTE_TABLE_PT1 + id;
+    }
+
+
+    public long addTemlpate(Note note) {
+        long id = addNoteToMainTable(db, note, true);
+        addNoteTable(db, id, true, note);
+        return id;
+    }
+
+
+    public long addNote(Note note) {
+        long id = addNoteToMainTable(db, note, false);
+        addNoteTable(db, id, false, note);
+        return id;
+    }
+
+
+    private long addNoteToMainTable(Note note, boolean isTemplate) {
+        Log.i(TAG, "addNoteToMainTable.. isTemplate: " + isTemplate);
+
+        if (db == null) db = getWritableDatabase();
+
+        String table;
+        if (isTemplate) table = TEMPLATES_TABLE;
+        else table = NOTES_TABLE;
+
+        StringBuilder tags = new StringBuilder();
+        List<String> tagz = note.getTags().getData();
+        for (String tag : tagz) {
+            tags.append(tag);
+            tags.append(",");
+        }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(NOTES_NAME_COLUMN, note.getName());
+        contentValues.put(NOTES_CREATED_COLUMN, System.currentTimeMillis());
+        contentValues.put(NOTES_EDITED_COLUMN, System.currentTimeMillis());
+        contentValues.put(NOTES_CAT_COLUMN, note.getCat().getData().get(0));
+        contentValues.put(NOTES_SUBCAT_COLUMN, note.getCat().getData().get(1));
+        contentValues.put(NOTES_TAGS_COLUMN, tags.toString());
+
+        Log.i(TAG, "adding note to " + table);
+        return db.insert(table, null, contentValues);
+    }
+
+
+    private boolean addNoteTable(long id, boolean isTemplate, Note note) {
+        Log.i(TAG, "addNoteTable");
+
+        String table;
+        if (isTemplate) table = templateTableNameById(id);
+        else table = noteTableNameById(id);
+
+        if (db == null) db = getWritableDatabase();
+        if (isExisting(table)) return false;
+
+        Log.i(TAG, "Adding note " + id + " as template? " + isTemplate);
+
+        List<Data> datas = note.getDatas();
+
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            for (Data data : datas) {
+                values.put(NOTE_TYPE_COLUMN, Data.idByDataType(null, data));
+                values.put(NOTE_VALUE_COLUMN, data.toString());
+                db.insert(table, null, values);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return true;
+    }
+
+
+    public Note getTemplateNote(long id) {
+        return getNote(id, true);
+    }
+
+
+    public Note getNote(long id) {
+        return getNote(id, false);
+    }
+
+
+    private Note getNote(long id, boolean isTemplate) {
+        Log.i(TAG, "getNote");
+
+        String table;
+        String subTable;
+        if (isTemplate) {
+            table = TEMPLATES_TABLE;
+            subTable = templateTableNameById(id);
+        } else {
+            table = NOTES_TABLE;
+            subTable = noteTableNameById(id);
+        }
+
+        if (db == null) db = getWritableDatabase();
+        if (!isExisting(db, subTable)) return null;
+
+        Log.i(TAG, "Getting note from table " + subTable);
+        Note note = new Note();
+
+        Cursor c = db.query(
+                table,   // The table to query
+                null,             // The array of columns to return (pass null to get all)
+                ID_COLUMN + "=?",              // The columns for the WHERE clause
+                new String[]{Long.toString(id)},          // The values for the WHERE clause
+                null,                   // don't group the rows
+                null,                   // don't filter by row groups
+                null               // The sort order
+        );
+        if (c.getCount() > 0) c.moveToFirst();
+
+        note.setName(c.getString(c.getColumnIndex(NOTES_NAME_COLUMN)));
+        note.setCreated(c.getLong(c.getColumnIndex(NOTES_CREATED_COLUMN)));
+        note.setEdited(c.getLong(c.getColumnIndex(NOTES_EDITED_COLUMN)));
+        note.setCat(c.getLong(c.getColumnIndex(NOTES_CAT_COLUMN)));
+        note.setSubCat(c.getLong(c.getColumnIndex(NOTES_SUBCAT_COLUMN)));
+
+
+        String tags = c.getString(c.getColumnIndex(NOTES_TAGS_COLUMN));
+
+
+        return note;
+    }
+
 }
