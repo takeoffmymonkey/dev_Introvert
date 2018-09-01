@@ -21,10 +21,10 @@ public class CatsManager extends Manager {
     private String subCatsColumn = DbHelper.SUBCATS_SUBCAT_COLUMN;
 
     public CatsManager() {
-        cats = (HashSet<String>) dbHelper.getColumnAsStringCollection(
+        cats = (HashSet<String>) dbHelper.getColumnAsCollection(
                 null, catsTable, catsColumn, new LinkedHashSet<>());
 
-        subCats = (HashSet<String>) dbHelper.getColumnAsStringCollection(
+        subCats = (HashSet<String>) dbHelper.getColumnAsCollection(
                 null, subCatsTable, subCatsColumn, new LinkedHashSet <>());
     }
 

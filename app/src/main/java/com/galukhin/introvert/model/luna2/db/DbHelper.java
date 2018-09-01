@@ -12,6 +12,7 @@ import com.galukhin.introvert.model.luna2.Note;
 import com.galukhin.introvert.model.luna2.data.Data;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -163,9 +164,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     private void initContent(String table) {
-        Log.i(TAG, "initContent");
-        if (!ensureReadiness(table, true)) return;
-
         insertRows(table, getInitValues(table));
     }
 
@@ -315,22 +313,59 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
+    /* ~~~~~~~UPDATE METHODS~~~~~~~ */
+    public boolean updateRow() {
+
+    }
+
+    public boolean updateRows() {
+
+    }
+
+
     /* ~~~~~~~READ METHODS~~~~~~~ */
-    public Collection<String> getColumnAsStringCollection(String table, String column,
-                                                          Collection<String> list) {
-        Log.i(TAG, "getColumnAsStringCollection");
+    private String[] filteredColumnSearch(String table, String column,
+                                         String whereColumn, String whereArg) {
         if (!ensureReadiness(table, true)) return null;
 
+        String[] list = null;
         try (Cursor c = db.query(
-                table, new String[]{column}, null, null, null,
-                null, null)) {
-            if (c.getCount() > 0) {
-                while (c.moveToNext()) {
-                    list.add(c.getString(c.getColumnIndex(column)));
+                table, // The table to query
+                new String[]{column, whereColumn}, // The array of columns to return (pass null to get all)
+                whereColumn + "=?",  // The columns for the WHERE clause
+                new String[]{whereArg}, // The values for the WHERE clause
+                null, // don't group the rows
+                null, // don't filter by row groups
+                null)) { // The sort order
+
+            int count = c.getCount();
+            if (count > 0) {
+                list = new String[count];
+                c.moveToFirst();
+                for (int i = 0; i < count; i++) {
+                    list[i] = c.getString(c.getColumnIndex(column));
                 }
             }
         }
 
+        return list;
+    }
+
+
+    public String getCellValue(String table, String column, int id) {
+        return filteredColumnSearch(table, column, ID_COLUMN, Integer.toString(id))[0];
+    }
+
+
+    public String[] getColumn(String table, String column) {
+        return filteredColumnSearch(table, column, null, null);
+    }
+
+
+    public Collection<String> getColumnAsCollection(String table, String column,
+                                                    Collection<String> list) {
+        List<String> l = Arrays.asList(filteredColumnSearch(table, column, null, null));
+        list.addAll(l);
         return list;
     }
 
@@ -361,39 +396,95 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public String[] getSubCats() {
+    public String[] getCats() {
+        return getColumn(CATS_TABLE, CATS_CAT_COLUMN);
     }
 
-    public String subCatsTableNameByCat(long id) {
 
+    public Collection<String> getCatsAsCollection(Collection<String> list) {
+        return getColumnAsCollection(CATS_TABLE, CATS_CAT_COLUMN, list);
     }
 
-    public String
+
+    public String[] getSubCats(int cat) {
+        return getSubCats(subCatsTableNameById(cat));
+    }
+
+
+    public String[] getSubCats(String subCatsTable) {
+        return getColumn(subCatsTable, SUBCATS_SUBCAT_COLUMN);
+    }
+
+
+    public Collection<String> getSubCatsAsCollection(int cat, Collection<String> list) {
+        return getSubCats(subCatsTableNameById(cat), list);
+    }
+
+
+    public Collection<String> getSubCats(String subCatsTable, Collection<String> list) {
+        return getColumnAsCollection(subCatsTable, SUBCATS_SUBCAT_COLUMN, list);
+    }
+
+
+    public int getCatId(String cat) {
+        List<String> cats = (List<String>) getCatsAsCollection(new ArrayList<>());
+        return cats.indexOf(cat);
+    }
+
+
+    public int getSubCatId(int cat, String subCat) {
+        List<String> subCats = (List<String>) getSubCatsAsCollection(cat, new ArrayList<>());
+        return subCats.indexOf(subCat);
+    }
+
+
+    public String subCatsTableNameByCat(int cat) {
+        return subCatsTableNameById(cat);
+    }
+
 
     public String subCatsTableNameByCat(String cat) {
-        Log.i(TAG, "subCatsTableNameByCat");
+        return subCatsTableNameById(getCatId(cat));
+    }
 
-        if (cat == null) return subCatsTableNameById(1);
 
-        if (db == null) db = getWritableDatabase();
-        if (!isExisting(db, CATS_TABLE)) return null;
+    /* ~~~~~~~TAGS METHODS~~~~~~~ */
+    public String[] getTagsByIds(int[] ids) {
 
-        Log.i(TAG, "Searching for the category " + cat);
+    }
 
-        Cursor c = db.query(
-                CATS_TABLE,   // The table to query
-                null,             // The array of columns to return (pass null to get all)
-                CATS_CAT_COLUMN + "=?",              // The columns for the WHERE clause
-                new String[]{cat},          // The values for the WHERE clause
-                null,                   // don't group the rows
-                null,                   // don't filter by row groups
-                null               // The sort order
-        );
 
-        if (c != null && c.getCount() > 0) {
-            c.moveToFirst();
-            return subCatsTableNameById(c.getInt(c.getColumnIndex(ID_COLUMN)));
-        } else return null;
+    public String[] getAllTags() {
+        return getColumn(TAGS_TABLE, TAGS_TAG_COLUMN);
+    }
+
+    public Collection<String> getAllTagsAsCollection(Collection<String> list) {
+        return getColumnAsCollection(TAGS_TABLE, TAGS_TAG_COLUMN, list);
+    }
+
+
+    public String[] getNoteTags(int id) {
+        return getNoteTags(id, false);
+    }
+
+
+    public String[] getTemplateTags(int id) {
+        return getNoteTags(id, true);
+    }
+
+
+    public String[] getNoteTags(int id, boolean isTemplate) {
+        String table;
+        if (isTemplate) table = TEMPLATES_TABLE;
+        else table = NOTES_TABLE;
+
+        // TODO: 001 01 Sep 18 remove last empty val from array
+        return getCellValue(table, NOTES_TAGS_COLUMN, id).split(",");
+    }
+
+
+    public int[] getNoteTagsIds(int id, boolean isTemplate) {
+
     }
 
 

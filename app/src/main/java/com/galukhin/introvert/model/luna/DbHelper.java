@@ -33,12 +33,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        Log.i(TAG, "DbHelper");
+        .i(TAG, "DbHelper");
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        Log.i(TAG, "OnCreate");
+        .i(TAG, "OnCreate");
         createNotesTable(db);
     }
 
@@ -48,8 +48,8 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public boolean isExisting(SQLiteDatabase db, String table) {
-        Log.i(TAG, "isExisting");
-        Log.i(TAG, "Checking " + table + " table existence");
+        .i(TAG, "isExisting");
+        .i(TAG, "Checking " + table + " table existence");
 
         if (db == null) db = getWritableDatabase();
 
@@ -59,22 +59,22 @@ public class DbHelper extends SQLiteOpenHelper {
         if (cursor != null) {
             if (cursor.getCount() > 0) {
                 cursor.close();
-                Log.i(TAG, "Table exists");
+                .i(TAG, "Table exists");
                 return true;
             }
             cursor.close();
         }
-        Log.i(TAG, "Table doesn't exists");
+        .i(TAG, "Table doesn't exists");
         return false;
     }
 
     public void createNotesTable(SQLiteDatabase db) {
-        Log.i(TAG, "createNotesTable");
+        .i(TAG, "createNotesTable");
 
         if (db == null) db = getWritableDatabase();
         if (isExisting(db, NOTES_TABLE)) return;
 
-        Log.i(TAG, "Creating NOTES table");
+        .i(TAG, "Creating NOTES table");
 
         String SQL_CREATE_NOTES_TABLE =
                 "CREATE TABLE " + NOTES_TABLE + " ("
@@ -86,7 +86,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void deleteNotes(SQLiteDatabase db) {
-        Log.i(TAG, "deleteNotes");
+        .i(TAG, "deleteNotes");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return;
@@ -104,7 +104,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void deleteNoteTable(SQLiteDatabase db, long id) {
-        Log.i(TAG, "deleteNoteTable");
+        .i(TAG, "deleteNoteTable");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, noteName(id))) return;
@@ -116,28 +116,28 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void addNote(SQLiteDatabase db, Note note) {
-        Log.i(TAG, "addNoteToMainTable");
+        .i(TAG, "addNoteToMainTable");
 
         if (db == null) db = getWritableDatabase();
         int id = notesCount(db) + 1;
 
-        Log.i(TAG, "Adding NOTE_" + id + " table to NOTES table");
+        .i(TAG, "Adding NOTE_" + id + " table to NOTES table");
 
         ContentValues values = new ContentValues();
         values.put(NOTES_NAME_COLUMN, id);
         values.put(NOTES_CREATED_COLUMN, System.currentTimeMillis());
 
         long newRowId = db.insert(NOTES_TABLE, null, values);
-        Log.i(TAG, "Inserted new row to NOTES table: " + newRowId);
+        .i(TAG, "Inserted new row to NOTES table: " + newRowId);
 
         createNoteTable(null, note, id);
     }
 
     public int notesCount(SQLiteDatabase db) {
-        Log.i(TAG, "notesCount");
+        .i(TAG, "notesCount");
         if (db == null) db = getWritableDatabase();
 
-        Log.i(TAG, "Counting notes in NOTES table");
+        .i(TAG, "Counting notes in NOTES table");
         int n = -1;
 
         String[] projection = {NOTES_ID_COLUMN};
@@ -158,12 +158,12 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void createNoteTable(SQLiteDatabase db, Note note, long id) {
-        Log.i(TAG, "createNoteTable");
+        .i(TAG, "createNoteTable");
 
         if (db == null) db = getWritableDatabase();
         if (isExisting(db, noteName(id))) return;
 
-        Log.i(TAG, "Creating " + noteName(id) + " table");
+        .i(TAG, "Creating " + noteName(id) + " table");
 
         String SQL_CREATE_NOTE_TABLE =
                 "CREATE TABLE " + noteName(id) + " ("
@@ -176,12 +176,12 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private void addNoteFields(SQLiteDatabase db, long id, List<Field> fields) {
-        Log.i(TAG, "addNoteFields");
+        .i(TAG, "addNoteFields");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, noteName(id))) return;
 
-        Log.i(TAG, "Adding note fields...");
+        .i(TAG, "Adding note fields...");
 
         ContentValues values;
         for (Field field : fields) {
@@ -189,12 +189,12 @@ public class DbHelper extends SQLiteOpenHelper {
             values.put(NOTE_TYPE_COLUMN, field.getType().name());
             values.put(NOTE_VALUE_COLUMN, field.getValue().toString());
             long newRowId = db.insert(noteName(id), null, values);
-            Log.i(TAG, "Inserted field to row " + newRowId);
+            .i(TAG, "Inserted field to row " + newRowId);
         }
     }
 
     public List<Field> getNoteFields(SQLiteDatabase db, long id, Context context) {
-        Log.i(TAG, "getNoteFields");
+        .i(TAG, "getNoteFields");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, noteName(id))) return null;
@@ -227,13 +227,13 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public String noteName(long id) {
-        Log.i(TAG, "noteName");
+        .i(TAG, "noteName");
 
         return NOTE_TABLE_PT1 + id;
     }
 
     public Cursor createNotesCursor(SQLiteDatabase db) {
-        Log.i(TAG, "createNotesCursor");
+        .i(TAG, "createNotesCursor");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return null;
@@ -255,12 +255,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     /* ~~~~~~~ DUMPING METHODS ~~~~~~~ */
     public void dumpNotesTable(SQLiteDatabase db) {
-        Log.i(TAG, "dumpNotesTable");
+        .i(TAG, "dumpNotesTable");
 
         if (db == null) db = getWritableDatabase();
         if (!isExisting(db, NOTES_TABLE)) return;
 
-        Log.i(TAG, "Performing NOTES table dump");
+        .i(TAG, "Performing NOTES table dump");
         Cursor c = db.query(
                 NOTES_TABLE, null, null, null,
                 null, null, null);
