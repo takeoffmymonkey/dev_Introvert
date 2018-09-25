@@ -1,12 +1,15 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import java.util.List;
 
+*/
 /**
  * Template constructor - a blueprint for creating new notes.
  * Contains Fields and responsible for their behavior inside it.
  * When creating a fresh note by this blueprint, Fields should be passed to the Note
- */
+ *//*
+
 
 public class Template {
     List<Field> fields;
@@ -32,3 +35,4 @@ public class Template {
     }
 
 }
+*/

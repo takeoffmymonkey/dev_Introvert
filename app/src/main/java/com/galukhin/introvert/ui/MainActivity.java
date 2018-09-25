@@ -1,34 +1,26 @@
 package com.galukhin.introvert.ui;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.galukhin.introvert.R;
-import com.galukhin.introvert.model.luna.NotesAdapter;
 import com.galukhin.introvert.model.luna2.db.DbHelper;
-
-import static com.galukhin.introvert.model.luna2.db.DbHelper.CATS_TABLE;
-import static com.galukhin.introvert.model.luna2.db.DbHelper.NOTES_TABLE;
-import static com.galukhin.introvert.model.luna2.db.DbHelper.TAGS_TABLE;
-import static com.galukhin.introvert.model.luna2.db.DbHelper.TYPES_TABLE;
 
 public class MainActivity extends AppCompatActivity {
 
     String TAG = "LUNA:" + getClass().getSimpleName();
 
-//    public static com.galukhin.introvert.model.luna.DbHelper dbHelper;
+    //    public static com.galukhin.introvert.model.luna.DbHelper dbHelper;
     public static DbHelper dbHelper2;
 
     ListView listView;
-    NotesAdapter adapter;
+//    NotesAdapter adapter;
 
 
     @Override
@@ -37,17 +29,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 //        dbHelper = new com.galukhin.introvert.model.luna.DbHelper(this);
-        dbHelper2 = new DbHelper(this);
+//        dbHelper2 = new DbHelper(this);
 
-        createAddButton();
+//        createAddButton();
         createTestButton();
-        listView = findViewById(R.id.notes_list);
-        setOnClickListenerForList(listView);
+//        listView = findViewById(R.id.notes_list);
+//        setOnClickListenerForList(listView);
 //        adapter = new NotesAdapter(
 //                this, dbHelper.createNotesCursor(null));
 //        listView.setAdapter(adapter);
 
-        dbHelper2.dumpTable(null, NOTES_TABLE);
+//        dbHelper2.dumpTable(null, NOTES_TABLE);
     }
 
     @Override
@@ -83,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void createAddButton() {
+/*    private void createAddButton() {
         Button addNoteBt = findViewById(R.id.add_note);
         addNoteBt.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,
@@ -91,18 +83,18 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(NoteActivity.NOTE_ID, 0);
             startActivity(intent);
         });
-    }
+    }*/
 
     private void createTestButton() {
         Button test = findViewById(R.id.test_activity);
         test.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this,
-                    TestActivity.class);
+                    TemplateEditorActivity.class);
             startActivity(intent);
         });
     }
 
-    private void updateCursor(CursorAdapter adapter, Cursor cursor) {
+/*    private void updateCursor(CursorAdapter adapter, Cursor cursor) {
         adapter.changeCursor(cursor);
     }
 
@@ -113,5 +105,5 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra(NoteActivity.NOTE_ID, l);
             startActivity(intent);
         });
-    }
+    }*/
 }

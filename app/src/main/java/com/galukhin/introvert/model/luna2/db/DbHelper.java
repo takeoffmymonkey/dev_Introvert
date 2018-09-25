@@ -6,17 +6,16 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.util.ArrayMap;
 import android.util.Log;
+import android.util.SparseArray;
 
 import com.galukhin.introvert.model.luna2.Note;
 import com.galukhin.introvert.model.luna2.data.Data;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class DbHelper extends SQLiteOpenHelper {
     // TODO: 031 31 Aug 18 check cursors closure
@@ -47,7 +46,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TAGS_NOTES_COLUMN = "Notes";
 
     /*TYPES_TABLE*/
-    public static final String TYPES_TABLE = "Types";
+    public static final String TYPES_TABLE = "SignalTypes";
     private static final String TYPES_TYPE_COLUMN = "Type";
 
     /*CATS_TABLE*/
@@ -220,6 +219,184 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
     /* ~~~~~~~~~~~~~~~~~~~~~ UTILITY METHODS ~~~~~~~~~~~~~~~~~~~~~ */
+    /* ~~~~~~~INSERT METHODS~~~~~~~ */
+    private boolean insertRow(String table, ContentValues values) {
+        List<ContentValues> contentValues = new ArrayList<>();
+        contentValues.add(values);
+        return insertRows(table, contentValues);
+    }
+
+
+    private boolean insertRows(String table, List<ContentValues> values) {
+        Log.i(TAG, "insertRows");
+        if (!ensureReadiness(table, true)) return false;
+
+        db.beginTransaction();
+        try {
+            for (ContentValues value : values) {
+                db.insert(table, null, value);
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return true;
+    }
+
+
+    /* ~~~~~~~UPDATE METHODS~~~~~~~ */
+    private boolean updateRow(String table, ContentValues values, int row) {
+        SparseArray<ContentValues> array = new SparseArray<>();
+        array.put(row, values);
+        return updateRows(table, array);
+    }
+
+
+    private boolean updateRows(String table, SparseArray<ContentValues> updates) {
+        Log.i(TAG, "updateRows");
+        if (!ensureReadiness(table, true)) return false;
+
+        int key;
+        ContentValues cv;
+
+        db.beginTransaction();
+        try {
+            for (int i = 0; i < updates.size(); i++) {
+                key = updates.keyAt(i);
+                cv = updates.get(key);
+                db.update(table, cv, ID_COLUMN, new String[]{Integer.toString(key)});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return true;
+    }
+
+
+    /* ~~~~~~~DELETE METHODS~~~~~~~ */
+    private boolean deleteRow(String table, int row) {
+        return deleteRows(table, new int[]{row});
+    }
+
+
+    private boolean deleteRows(String table, int[] rows) {
+        Log.i(TAG, "deleteRow");
+        if (!ensureReadiness(table, true)) return false;
+
+        db.beginTransaction();
+        try {
+            for (int row : rows) {
+                db.delete(table, ID_COLUMN, new String[]{Integer.toString(row)});
+            }
+            db.setTransactionSuccessful();
+        } finally {
+            db.endTransaction();
+        }
+
+        return true;
+    }
+
+
+    private boolean deleteTable(String table) {
+        Log.i(TAG, "deleteTable");
+        if (!ensureReadiness(table, true)) return false;
+
+        String SQL_DELETE_TABLE = "DROP TABLE IF EXISTS " + table;
+        db.execSQL(SQL_DELETE_TABLE);
+
+        return true;
+    }
+
+
+    /* ~~~~~~~READ METHODS~~~~~~~ */
+    private String[] getColumnNames(String table) {
+        if (!ensureReadiness(table, true)) return null;
+
+        String[] columns;
+        try (Cursor c = db.query(table, null, null, null,
+                null, null, null)) {
+            columns = c.getColumnNames();
+        }
+
+        return columns;
+    }
+
+    private String[] getColumnFiltered(String table, String column,
+                                       String whereColumn, String whereArg) {
+        if (!ensureReadiness(table, true)) return null;
+
+        String[] list = null;
+        try (Cursor c = db.query(
+                table, // The table to query
+                new String[]{column, whereColumn}, // The array of columns to return (pass null to get all)
+                whereColumn + "=?",  // The columns for the WHERE clause
+                new String[]{whereArg}, // The values for the WHERE clause
+                null, // don't group the rows
+                null, // don't filter by row groups
+                null)) { // The sort order
+
+            int count = c.getCount();
+            if (count > 0) {
+                list = new String[count];
+                c.moveToFirst();
+                for (int i = 0; i < count; i++) {
+                    list[i] = c.getString(c.getColumnIndex(column));
+                }
+            }
+        }
+
+        return list;
+    }
+
+
+    private String getCellValue(String table, String column, int id) {
+        return getColumnFiltered(table, column, ID_COLUMN, Integer.toString(id))[0];
+    }
+
+
+    private String[] getColumn(String table, String column) {
+        return getColumnFiltered(table, column, null, null);
+    }
+
+
+    private String[] getRowFiltered(String table, int row, String[] columns) {
+        if (!ensureReadiness(table, true)) return null;
+
+        String[] vals = new String[columns.length];
+        try (Cursor c = db.query(table, columns,
+                ID_COLUMN + "=?", new String[]{Integer.toString(row)},
+                null, null, null)) {
+            if (c.getCount() == 1) {
+                c.moveToFirst();
+                for (int i = 0; i < vals.length; i++) {
+                    vals[i] = c.getString(c.getColumnIndex(columns[i]));
+                }
+            }
+        }
+
+        return vals;
+    }
+
+
+    private ArrayMap<String, String> getRowFilteredMapped(String table, int row, String[] columns) {
+        String[] vals = getRowFiltered(table, row, columns);
+        ArrayMap<String, String> map = new ArrayMap<>();
+
+        for (int i = 0; i < vals.length; i++) {
+            map.put(columns[i], vals[i]);
+        }
+        return map;
+    }
+
+
+    private ArrayMap<String, String> getMappedRow(String table, int row) {
+        return getRowFilteredMapped(table, row, getColumnNames(table));
+    }
+
+
     /* ~~~~~~~CHECKER METHODS~~~~~~~ */
     private boolean ensureDbReadiness() { //
         return ensureReadiness(null, false);
@@ -287,110 +464,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    /* ~~~~~~~INSERT METHODS~~~~~~~ */
-    public boolean insertRow(String table, ContentValues values) {
-        List<ContentValues> contentValues = new ArrayList<>();
-        contentValues.add(values);
-        return insertRows(table, contentValues);
-    }
-
-
-    public boolean insertRows(String table, List<ContentValues> values) {
-        Log.i(TAG, "insertRows");
-        if (!ensureReadiness(table, true)) return false;
-
-        db.beginTransaction();
-        try {
-            for (ContentValues value : values) {
-                db.insert(table, null, value);
-            }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
-        }
-
-        return true;
-    }
-
-
-    /* ~~~~~~~UPDATE METHODS~~~~~~~ */
-    public boolean updateRow() {
-
-    }
-
-    public boolean updateRows() {
-
-    }
-
-
-    /* ~~~~~~~READ METHODS~~~~~~~ */
-    private String[] filteredColumnSearch(String table, String column,
-                                         String whereColumn, String whereArg) {
-        if (!ensureReadiness(table, true)) return null;
-
-        String[] list = null;
-        try (Cursor c = db.query(
-                table, // The table to query
-                new String[]{column, whereColumn}, // The array of columns to return (pass null to get all)
-                whereColumn + "=?",  // The columns for the WHERE clause
-                new String[]{whereArg}, // The values for the WHERE clause
-                null, // don't group the rows
-                null, // don't filter by row groups
-                null)) { // The sort order
-
-            int count = c.getCount();
-            if (count > 0) {
-                list = new String[count];
-                c.moveToFirst();
-                for (int i = 0; i < count; i++) {
-                    list[i] = c.getString(c.getColumnIndex(column));
-                }
-            }
-        }
-
-        return list;
-    }
-
-
-    public String getCellValue(String table, String column, int id) {
-        return filteredColumnSearch(table, column, ID_COLUMN, Integer.toString(id))[0];
-    }
-
-
-    public String[] getColumn(String table, String column) {
-        return filteredColumnSearch(table, column, null, null);
-    }
-
-
-    public Collection<String> getColumnAsCollection(String table, String column,
-                                                    Collection<String> list) {
-        List<String> l = Arrays.asList(filteredColumnSearch(table, column, null, null));
-        list.addAll(l);
-        return list;
-    }
-
-
-    public Map<String, String> getRowAsStringMap(String table, long row, String[] columns) {
-        Log.i(TAG, "getRowAsStringMap");
-        if (!ensureReadiness(table, true)) return null;
-
-        Map<String, String> map = new HashMap<>();
-        try (Cursor c = db.query(table, columns,
-                ID_COLUMN + "=?", new String[]{Long.toString(row)},
-                null, null, null)) {
-            if (c.getCount() == 1) {
-                c.moveToNext();
-                for (String s : columns) {
-                    map.put(s, c.getString(c.getColumnIndex(s)));
-                }
-            }
-        }
-
-        return map;
-    }
-
-
-    /* ~~~~~~~ CATS/SUBCATS METHODS~~~~~~~ */
+ /*   *//* ~~~~~~~ CATS/SUBCATS METHODS~~~~~~~ *//*
     private String subCatsTableNameById(int id) {
         return SUBCATS_TABLE_PT1 + id;
     }
@@ -401,11 +475,6 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    public Collection<String> getCatsAsCollection(Collection<String> list) {
-        return getColumnAsCollection(CATS_TABLE, CATS_CAT_COLUMN, list);
-    }
-
-
     public String[] getSubCats(int cat) {
         return getSubCats(subCatsTableNameById(cat));
     }
@@ -413,16 +482,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public String[] getSubCats(String subCatsTable) {
         return getColumn(subCatsTable, SUBCATS_SUBCAT_COLUMN);
-    }
-
-
-    public Collection<String> getSubCatsAsCollection(int cat, Collection<String> list) {
-        return getSubCats(subCatsTableNameById(cat), list);
-    }
-
-
-    public Collection<String> getSubCats(String subCatsTable, Collection<String> list) {
-        return getColumnAsCollection(subCatsTable, SUBCATS_SUBCAT_COLUMN, list);
     }
 
 
@@ -448,7 +507,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    /* ~~~~~~~TAGS METHODS~~~~~~~ */
+    *//* ~~~~~~~TAGS METHODS~~~~~~~ *//*
     public String[] getTagsByIds(int[] ids) {
 
     }
@@ -459,7 +518,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public Collection<String> getAllTagsAsCollection(Collection<String> list) {
-        return getColumnAsCollection(TAGS_TABLE, TAGS_TAG_COLUMN, list);
+        return getColumnAsList(TAGS_TABLE, TAGS_TAG_COLUMN, list);
     }
 
 
@@ -488,7 +547,7 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
 
-    /* ~~~~~~~ NOTE/TEMPLATE METHODS~~~~~~~ */
+    *//* ~~~~~~~ NOTE/TEMPLATE METHODS~~~~~~~ *//*
     public static String templateTableNameById(long id) {
         return TEMPLATE_TABLE_PT1 + id;
     }
@@ -624,6 +683,6 @@ public class DbHelper extends SQLiteOpenHelper {
 
 
         return note;
-    }
+    }*/
 
 }

@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.content.ContentValues;
@@ -14,17 +15,23 @@ import java.util.List;
 public class DbHelper extends SQLiteOpenHelper {
     private static String TAG = "LUNA:" + "DbHelper";
 
-    /*DATABASE*/
+    */
+/*DATABASE*//*
+
     private static final String DATABASE_NAME = "luna";
     private static final int DATABASE_VERSION = 1;
 
-    /*NOTES_TABLE*/
+    */
+/*NOTES_TABLE*//*
+
     public static final String NOTES_TABLE = "Notes";
     public static final String NOTES_ID_COLUMN = BaseColumns._ID;
     public static final String NOTES_NAME_COLUMN = "Name";
     public static final String NOTES_CREATED_COLUMN = "Created";
 
-    /*NOTE_N TABLE*/
+    */
+/*NOTE_N TABLE*//*
+
     public static String NOTE_TABLE_PT1 = "Note_";
     private static final String NOTE_ID_COLUMN = BaseColumns._ID;
     private static final String NOTE_TYPE_COLUMN = "Type";
@@ -212,12 +219,12 @@ public class DbHelper extends SQLiteOpenHelper {
         );
 
         List<Field> fields = new ArrayList<>();
-        Types t;
+        SignalTypes t;
         String v;
 
         // TODO: 009 09 Aug 18 hardcoded!
         while (c.moveToNext()) {
-            t = Types.valueOf(c.getString(c.getColumnIndex(NOTE_TYPE_COLUMN)));
+            t = SignalTypes.valueOf(c.getString(c.getColumnIndex(NOTE_TYPE_COLUMN)));
             v = c.getString(c.getColumnIndex(NOTE_VALUE_COLUMN));
             fields.add(Fields.createEditTextField(v, context));
         }
@@ -253,7 +260,9 @@ public class DbHelper extends SQLiteOpenHelper {
         );
     }
 
-    /* ~~~~~~~ DUMPING METHODS ~~~~~~~ */
+    */
+/* ~~~~~~~ DUMPING METHODS ~~~~~~~ *//*
+
     public void dumpNotesTable(SQLiteDatabase db) {
         .i(TAG, "dumpNotesTable");
 
@@ -311,4 +320,4 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.e(TAG, "========================================================");
         c.close();
     }
-}
+}*/

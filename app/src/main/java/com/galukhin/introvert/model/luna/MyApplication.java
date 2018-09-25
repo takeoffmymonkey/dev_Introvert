@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.app.Application;
@@ -26,3 +27,4 @@ public class MyApplication extends Application {
         return MyApplication.db;
     }
 }
+*/

@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.managers;
 
 import android.app.Activity;
@@ -15,6 +16,7 @@ import com.galukhin.introvert.model.luna2.editors.TextEditor;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * A bridge between a note and corresponding to its data editors.
  * It represents the initial structure of a note, so any new note
@@ -22,7 +24,8 @@ import java.util.List;
  * A template holds a properly ordered list of editors, some
  * (or all) of which may be mandatory.
  * An edited template can be saved for further usages.
- */
+ *//*
+
 
 
 public class NoteManager {
@@ -92,3 +95,4 @@ public class NoteManager {
         return editor;
     }
 }
+*/

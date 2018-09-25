@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.managers;
 
 import android.content.ContentValues;
@@ -7,9 +8,11 @@ import com.galukhin.introvert.model.luna2.db.DbHelper;
 import java.util.HashSet;
 import java.util.Set;
 
+*/
 /**
  * Represents available tags for TagsEditor.
- */
+ *//*
+
 
 public class TagsManager extends Manager {
     private Set<String> tags;
@@ -37,4 +40,4 @@ public class TagsManager extends Manager {
     public static void cleanUnused() {
         // TODO: 028 28 Aug 18 remove tags that have no note containing them
     }
-}
+}*/

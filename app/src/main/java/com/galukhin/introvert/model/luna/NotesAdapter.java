@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.content.Context;
@@ -32,3 +33,4 @@ public class NotesAdapter extends CursorAdapter {
         tvCreated.setText(String.valueOf(created));
     }
 }
+*/

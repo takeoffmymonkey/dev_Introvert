@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.managers;
 
 import com.galukhin.introvert.model.luna2.db.DbHelper;
@@ -44,4 +45,4 @@ public abstract class Manager implements Observable {
             observer.update();
         }
     }
-}
+}*/

@@ -1,7 +1,9 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.view.View;
 
+*/
 /**
  * Represents a field from the template and holds a corresponding View.
  * Can be mandatory and not.
@@ -9,22 +11,23 @@ import android.view.View;
  * Type of widget depends primarily on the value type. For example, it value type is
  * TEXT, then it can be either TextView or EditText and not ImageView (until adapters
  * are implemented)
- */
+ *//*
+
 
 public class Field {
-    Types type;
+    SignalTypes type;
     Value value;
 
     boolean mandatory;
     View view;
 
-    public Field(View view, Types type, Value value) {
+    public Field(View view, SignalTypes type, Value value) {
         this.view = view;
         this.type = type;
         this.value = value;
     }
 
-    public Types getType() {
+    public SignalTypes getType() {
         return type;
     }
 
@@ -35,4 +38,4 @@ public class Field {
     public View getView() {
         return view;
     }
-}
+}*/

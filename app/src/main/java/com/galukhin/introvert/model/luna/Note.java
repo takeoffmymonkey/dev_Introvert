@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.content.Context;
@@ -8,13 +9,15 @@ import com.galukhin.introvert.ui.MainActivity;
 
 import java.util.List;
 
+*/
 /**
  * Represents a note.
  * <p>
  * Note object may be created:
  * 1 - using a provided template - note is fresh and not in the db yet
  * 2 - using a provided id - this note already exists in the db
- */
+ *//*
+
 
 public class Note {
 
@@ -25,17 +28,21 @@ public class Note {
     private boolean exists;
 
 
-    /**
+    */
+/**
      * For not yet existing notes. A provided template will be used
-     */
+     *//*
+
     public Note(Template template) {
         fields = template.getFields();
         exists = false;
     }
 
-    /**
+    */
+/**
      * For existing note
-     */
+     *//*
+
     public Note(long id, Context context) {
         this.id = id;
 //        fields = Fields.getFieldsById(id, context);
@@ -93,4 +100,4 @@ public class Note {
             ((TextValue) field.getValue()).setValue(value);
         }
     }
-}
+}*/

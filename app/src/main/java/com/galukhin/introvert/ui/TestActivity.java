@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.ui;
 
 import android.os.Bundle;
@@ -33,4 +34,4 @@ public class TestActivity extends AppCompatActivity {
             template.add(data);
         });
     }
-}
+}*/

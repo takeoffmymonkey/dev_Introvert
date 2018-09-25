@@ -1,20 +1,23 @@
+/*
 package com.galukhin.introvert.model.luna;
 
+*/
 /**
  * Represents a value for the field.
  * Can be pre-defined.
  * Has a Type.
- */
+ *//*
+
 
 public abstract class Value {
-    private Types type;
+    private SignalTypes type;
     private boolean isDefault;
 
-    public Value(Types type) {
+    public Value(SignalTypes type) {
         this.type = type;
     }
 
-    public void setType(Types type) {
+    public void setType(SignalTypes type) {
         this.type = type;
     }
 
@@ -23,7 +26,7 @@ public abstract class Value {
     }
 
 
-    public Types getType() {
+    public SignalTypes getType() {
         return type;
     }
 
@@ -33,3 +36,4 @@ public abstract class Value {
 
     public abstract String toString();
 }
+*/

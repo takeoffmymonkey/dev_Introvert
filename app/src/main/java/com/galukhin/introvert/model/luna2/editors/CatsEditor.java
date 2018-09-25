@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
@@ -46,4 +47,4 @@ public class CatsEditor extends Editor implements Observer {
     public void update() {
 
     }
-}
+}*/

@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
@@ -47,4 +48,4 @@ public abstract class Editor {
             invisible = false;
         }
     }
-}
+}*/

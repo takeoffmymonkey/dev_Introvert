@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
@@ -94,4 +95,4 @@ public class TagsEditor extends Editor implements Observer {
     public void update() {
         tagAcTv.setAdapter(adapter());
     }
-}
+}*/

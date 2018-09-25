@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.editors;
 
 import android.app.Activity;
@@ -11,9 +12,11 @@ import com.galukhin.introvert.R;
 import com.galukhin.introvert.model.luna2.data.Data;
 import com.galukhin.introvert.model.luna2.data.TextData;
 
+*/
 /**
  * Presents and edits basic data (i.e. String)
- */
+ *//*
+
 
 public class TextEditor extends Editor {
     private EditText textEt;
@@ -49,4 +52,4 @@ public class TextEditor extends Editor {
         textEt.setText(data.toString());
         this.data = data;
     }
-}
+}*/

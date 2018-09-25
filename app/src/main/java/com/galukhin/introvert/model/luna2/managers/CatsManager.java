@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna2.managers;
 
 import android.content.ContentValues;
@@ -8,9 +9,11 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+*/
 /**
  * Represents available categories and their subcategories for CatsEditor.
- */
+ *//*
+
 
 public class CatsManager extends Manager {
     private Set<String> cats;
@@ -45,4 +48,4 @@ public class CatsManager extends Manager {
     public String[] getSubCags() {
         return subCats.toArray(new String[0]);
     }
-}
+}*/

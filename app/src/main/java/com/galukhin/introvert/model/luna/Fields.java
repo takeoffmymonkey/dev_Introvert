@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 import android.content.Context;
@@ -9,9 +10,11 @@ import com.galukhin.introvert.ui.MainActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+*/
 /**
  * This class contains utility methods for Field lists
- */
+ *//*
+
 
 public class Fields {
     public static Field createEditTextField(String value,
@@ -23,8 +26,8 @@ public class Fields {
         if (value != null) editText.setText(value);
         else editText.setText("test");
 
-        return new Field(editText, Types.TEXT,
-                new TextValue(Types.TEXT, null));
+        return new Field(editText, SignalTypes.TEXT,
+                new TextValue(SignalTypes.TEXT, null));
     }
 
 
@@ -39,8 +42,8 @@ public class Fields {
                     LinearLayout.LayoutParams.WRAP_CONTENT));
             if (value != null) editText.setText(value);
             else editText.setText("test");
-            fields.add(new Field(editText, Types.TEXT,
-                    new TextValue(Types.TEXT, null)));
+            fields.add(new Field(editText, SignalTypes.TEXT,
+                    new TextValue(SignalTypes.TEXT, null)));
         }
         return fields;
     }
@@ -48,4 +51,4 @@ public class Fields {
 //    public static List<Field> getFieldsById(long noteId, Context context) {
 //        return MainActivity.dbHelper.getNoteFields(null, noteId, context);
 //    }
-}
+}*/

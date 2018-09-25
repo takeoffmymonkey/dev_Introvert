@@ -1,3 +1,4 @@
+/*
 package com.galukhin.introvert.model.luna;
 
 public class TextValue extends Value {
@@ -25,3 +26,4 @@ public class TextValue extends Value {
         return getValue();
     }
 }
+*/
